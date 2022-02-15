@@ -13,7 +13,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Isi.ShoppingApp.Presentation
+using Isi.ShoppingApp.Domain.Services;
+using Isi.ShoppingApp.Presentation.ViewModels;
+
+namespace Isi.ShoppingApp.Presentation.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -23,6 +26,8 @@ namespace Isi.ShoppingApp.Presentation
         public MainWindow()
         {
             InitializeComponent();
+            Controller controller = new Controller();
+            DataContext = controller;
         }
     }
 }

@@ -8,13 +8,24 @@ namespace Isi.ShoppingApp.Core.Entities
 {
     public class Product
     {
+        public decimal FinalPrice
+        {
+            get
+            {
+                return Price - (GetDiscountForFinalPrice() * Price);
+            }
+        }
+
         public long Id { get; }
         public string Name { get; set; }
         public string Category { get; set; }
         public string Description { get; set; }
-        private decimal Price { get; set; }
+        public decimal Price { get; set; }
         public int Quantity { get; set; }
         public decimal? PercentageDiscount { get; set; }
+
+
+        private decimal finalPrice;
 
         public Product(long id, string name, string category, string description, decimal price, int quantity , decimal? percentageDiscount)
         {
@@ -41,11 +52,6 @@ namespace Isi.ShoppingApp.Core.Entities
             if (toReturn > 0)
                 toReturn /= 100;
             return toReturn;
-        }
-
-        public decimal FinalPrice()
-        {
-            return Price - (GetDiscountForFinalPrice() * Price);
         }
 
         public override string ToString()

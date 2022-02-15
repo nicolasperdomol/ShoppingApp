@@ -1,5 +1,8 @@
 ﻿using Isi.ShoppingApp.Core.Entities;
+using Isi.ShoppingApp.Data.Repositories;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Isi.ShoppingApp.Tests
 {
@@ -7,7 +10,8 @@ namespace Isi.ShoppingApp.Tests
     {
         static void Main(string[] args)
         {
-            Console.WriteLine();
+            Isi.ShoppingApp.Domain.Services.Inventory inventory = new Domain.Services.Inventory();
+
         }
     }
 }
