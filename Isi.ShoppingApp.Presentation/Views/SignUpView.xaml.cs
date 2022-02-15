@@ -13,12 +13,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-<<<<<<< HEAD:Isi.ShoppingApp.Presentation/Views/MainWindow.xaml.cs
-using Isi.ShoppingApp.Domain.Services;
-using Isi.ShoppingApp.Presentation.ViewModels;
-
-=======
->>>>>>> 8d63b377c906e6a7e38c20f2269a4b798258d22f:Isi.ShoppingApp.Presentation/Views/SignUpView.xaml.cs
 namespace Isi.ShoppingApp.Presentation.Views
 {
     /// <summary>
@@ -29,8 +23,6 @@ namespace Isi.ShoppingApp.Presentation.Views
         public SignUpView()
         {
             InitializeComponent();
-            Controller controller = new Controller();
-            DataContext = controller;
         }
     }
 }
