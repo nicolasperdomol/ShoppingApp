@@ -1,4 +1,8 @@
 ﻿using Isi.Utility.ViewModels;
+using Isi.ShoppingApp.Core.Entities;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace Isi.ShoppingApp.Presentation.ViewModels
 {
@@ -6,35 +10,47 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
 
     class LoginViewModel : ViewModel
     {
-        //TODO model the model class
-        public DelegateCommand LoginCommand { get;  }
+        public DelegateCommand LoginCommand { get; }
         public DelegateCommand SignUpCommand { get; }
 
-        public event ActionSucceededHandler ActionSucceeded;
+        public event ActionSucceededHandler SignUpSucceeded;
 
-        public string Username 
-        { 
-            get 
+        public string Username
+        {
+            get
             {
                 return username;
-            } 
+            }
             set
             {
-                if(!string.IsNullOrWhiteSpace(value))
+                if (!string.IsNullOrWhiteSpace(value)) 
+                { 
                     username = value;
+                    LoginCommand.NotifyCanExecuteChanged();
+                    SignUpCommand.NotifyCanExecuteChanged();
+                }
 
             }
-        
+
         }
-        public string Password 
+
+
+        public string Password
         { 
+
             get 
             {
                 return password;
             } 
             set
             {
-                password = value;
+                if(!string.IsNullOrWhiteSpace(value))
+                {
+                    password = value;
+                    LoginCommand.NotifyCanExecuteChanged();
+                    SignUpCommand.NotifyCanExecuteChanged();
+                }
+
             }
         }
 
@@ -43,29 +59,30 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
         public LoginViewModel() 
         {
             SignUpCommand = new DelegateCommand(SignUp, CanSignUp);
+            LoginCommand = new DelegateCommand(LogIn, CanLogIn);
         }
 
         private bool CanSignUp(object _)
         {
-            //TODO check if password and username are valid
-            return true;
+            return !string.IsNullOrWhiteSpace(username)
+                && !string.IsNullOrWhiteSpace(password);
         }
 
         private void SignUp(object _) {
 
             if (CanSignUp(_))
             {
-                //TODO create username + password + store in database
-                //display success message
 
+                Username = username;
+                Password = password;
                 Trace.WriteLine("Signing up");
             }
         }
 
         private bool CanLogIn(object _)
         {
-            //check if password/username pair is correct
-            return true;
+            return !string.IsNullOrWhiteSpace(username)
+                    && !string.IsNullOrWhiteSpace(password);
         }
 
         private void LogIn(object _)
@@ -73,7 +90,6 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
             if (CanLogIn(_))
             {
                 //login, close current window + open main application window
-
                 Trace.WriteLine("Logging in");
             }
         }
@@ -87,9 +103,20 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
         private bool IsInputValid(string input)
         {
             if(!string.IsNullOrWhiteSpace(input))
+            {
                 return true;
+            }
+            else
+            {
+                MessageBox.Show("Username and password can only contain 9 characters and cannot contain spaces","Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+        }
 
-            return false;
+        private void CreateUser(string username, string password)
+        {
+            User user = new User(username, password, false);
+            SignUpSucceeded?.Invoke("Successfully created");
         }
     }
 }

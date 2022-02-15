@@ -7,7 +7,7 @@ namespace Isi.ShoppingApp.Tests
     {
         static void Main(string[] args)
         {
-            Console.WriteLine();
+           
         }
     }
 }

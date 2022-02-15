@@ -1,13 +1,8 @@
-﻿using Isi.ShoppingApp.Utilities
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Isi.Utility.Authentication;
 
 namespace Isi.ShoppingApp.Core.Entities
 {
-     class Users
+     public class User
     {
         private int MaxCharacter = 9; //Max characters for username and password
         
@@ -17,10 +12,9 @@ namespace Isi.ShoppingApp.Core.Entities
             {
                 return username;
             }
-            set
+            private set
             {
-                if(IsUsernameValid(value))
-                    username = value;
+                username = value;
             }
                 
         }
@@ -32,10 +26,9 @@ namespace Isi.ShoppingApp.Core.Entities
             {
                 return password;
             }
-            set
+            private set
             {
-                if (IsPasswordValid(value))
-                    password = value;
+               password = value;
             }
         }
         private string password;
@@ -67,7 +60,7 @@ namespace Isi.ShoppingApp.Core.Entities
         }
         private bool isAdmin;
 
-        public Users(string username, string password, bool isAdmin)
+        public User(string username, string password, bool isAdmin)
         {
             Username = createUsername(username);
             HashedPassword = createPassword(password);
