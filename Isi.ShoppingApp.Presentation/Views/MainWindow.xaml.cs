@@ -13,20 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-<<<<<<< HEAD:Isi.ShoppingApp.Presentation/Views/MainWindow.xaml.cs
+using Isi.ShoppingApp.Presentation;
 using Isi.ShoppingApp.Domain.Services;
 using Isi.ShoppingApp.Presentation.ViewModels;
 
-=======
->>>>>>> 8d63b377c906e6a7e38c20f2269a4b798258d22f:Isi.ShoppingApp.Presentation/Views/SignUpView.xaml.cs
 namespace Isi.ShoppingApp.Presentation.Views
 {
-    /// <summary>
-    /// Interaction logic for SignUpView.xaml
-    /// </summary>
-    public partial class SignUpView : UserControl
+
+    public partial class MainWindow : Window
     {
-        public SignUpView()
+        public MainWindow()
         {
             InitializeComponent();
             Controller controller = new Controller();

@@ -4,9 +4,81 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Isi.ShoppingApp.Presentation.Views"
+        
+        xmlns:toolkit ="using:WinRTXamlToolkit.Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="240" Width="228">
-    <DockPanel>
-        <local:LoginView/>
+        Title="Shop" Height="450" Width="800">
+
+    <DockPanel Name="Header">
+        <StackPanel Background="#FFBA24" DockPanel.Dock="Top" MinHeight="30px">
+            <DockPanel Margin="40,10,40,10">
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                    <Label FontSize="19px" FontFamily="Helvetica" FontWeight="DemiBold">ShopApp</Label>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                    <Button Background="white" Width="30" Height="30" BorderThickness="0.8">
+                        <StackPanel>
+                            <Image Source="Img/Icons/user.png" MaxWidth="15px"/>
+
+                        </StackPanel>
+                    </Button>
+                    <Button Background="white" Width="30" Height="30" BorderThickness="0.8" Margin="5,0,0,0">
+                        <StackPanel>
+                            <Image Source="Img/Icons/shopping-cart.png" MaxWidth="15px"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </DockPanel>
+        </StackPanel>
+
+
+        <StackPanel Name="Body" DockPanel.Dock="Bottom" Background="#ECECEC">
+            <StackPanel Margin="40,0,40,0" Background="white">
+
+                <StackPanel>
+                    <DataGrid ItemsSource="{Binding Path=Products}" SelectionMode="Single"/>
+                </StackPanel>
+
+                <StackPanel Margin="20">
+                    <ItemsControl ItemsSource="{Binding Path=Products}">
+
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="5"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <DataTemplate.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Background" Value="#ECECEC"/>
+                                    </Style>
+                                </DataTemplate.Resources>
+                                <Grid>
+                                    <StackPanel Margin="10">
+                                        <TextBlock Text="{Binding Path=Id}"/>
+                                        <TextBlock Text="{Binding Path=Name}"/>
+
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,5" HorizontalAlignment="Center">
+                                            <Button Content="&lt;"/>
+                                            <TextBlock Text="1"/>
+                                            <Button Content=">"/>
+                                        </StackPanel>
+
+                                        <Button Content="Add to Cart"/>
+
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+
+                    </ItemsControl>
+                </StackPanel>
+
+            </StackPanel>
+        </StackPanel>
     </DockPanel>
+
 </Window>
