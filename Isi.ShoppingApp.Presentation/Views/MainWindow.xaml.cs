@@ -16,17 +16,28 @@ using System.Windows.Shapes;
 using Isi.ShoppingApp.Presentation;
 using Isi.ShoppingApp.Domain.Services;
 using Isi.ShoppingApp.Presentation.ViewModels;
+using System.Diagnostics;
 
 namespace Isi.ShoppingApp.Presentation.Views
 {
-
     public partial class MainWindow : Window
     {
+        Controller controller;
         public MainWindow()
         {
             InitializeComponent();
-            Controller controller = new Controller();
+            controller = new Controller();
             DataContext = controller;
+            
+        }
+
+        private void OnItemButtonClicked(object sender, RoutedEventArgs e)
+        {
+            Inventory inventory = new Inventory();
+            CartPanel.Visibility = Visibility.Visible;
+            long ButtonId = (long)(sender as Button).Tag;
+            this.Width = 900;
+            controller.ProductSelected = inventory.GetProduct(ButtonId);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace Isi.ShoppingApp.Data.Repositories
             return count > 0;
         }
 
-        public Product GetProduct(int id)
+        public Product GetProduct(long id)
         {
             SqlConnection connection = new(connectionString);
             connection.Open();
