@@ -11,6 +11,7 @@ namespace Isi.ShoppingApp.Presentation.Views
             LoginViewModel viewModel = new LoginViewModel();
             DataContext = viewModel;
             //add listeners for success message
+            //close window, and open sign up
         }
     }
 }
