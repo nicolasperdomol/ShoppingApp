@@ -18,12 +18,12 @@ namespace Isi.ShoppingApp.Data.Repositories
 
         public List<User> GetUsers()
         {
-            SqlConnection connection = new SqlConnection(connectionString);
+            using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
 
-            SqlCommand command = connection.CreateCommand();
-            command.CommandText = "SELECT Username, PasswordSalt, PasswordHash, Admin, Balance " +
-                                  "FROM dbo.Users";
+           using SqlCommand command = connection.CreateCommand();
+           command.CommandText = "SELECT FirstName, LastName, Username, PasswordSalt, PasswordHash, Admin, Balance " +
+                                 "FROM dbo.Users";
 
             List<User> users = new List<User>();
             SqlDataReader reader = command.ExecuteReader();
@@ -36,31 +36,38 @@ namespace Isi.ShoppingApp.Data.Repositories
 
         private User ReadNextUser(SqlDataReader reader)
         {
+            string firstName = reader.GetString(0);
+            string lastName = reader.GetString(1);
+            string username = reader.GetString(2);
+            byte[] passwordSalt = (byte[])reader.GetValue(3);
+            byte[] passwordHash = (byte[])reader.GetValue(4);
+            bool isAdmin = reader.GetBoolean(5);
+            decimal balance = reader.GetDecimal(6);
 
-           string firstName = reader.GetString(0);
-           string lastName = reader.GetString(1);
-           string username = reader.GetString(2);
-           //TODO byte[] passwordSalt = reader.GetBytes(3);
-           //TODO byte[] passwordHash = reader.GetByte(4); 
-           bool isAdmin = reader.GetBoolean(5);
-        
-          //return new User(firstName, lastName, username, new HashedPassword(passwordSalt, passwordHash), isAdmin);
-            return null;
+            return new User(firstName, lastName, username, new HashedPassword(passwordSalt, passwordHash), isAdmin, balance);
+        }
+
+        public bool UserExist(string username)
+        {
+            if (GetUser(username) != null)
+                return true;
+
+            return false;
         }
 
         public User GetUser(string username)
         {
-            SqlConnection connection = new SqlConnection(connectionString);
+            using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
 
-            SqlCommand command = connection.CreateCommand();
-            command.CommandText = "SELECT FirstName, LastName, Username, PasswordSalt, PasswordHash, Admin, Balance " +
-                                  "FROM dbo.Users " +
-                                  "WHERE Username = @Username";
+           using SqlCommand command = connection.CreateCommand();
+           command.CommandText = "SELECT FirstName, LastName, Username, PasswordSalt, PasswordHash, Admin, Balance " +
+                                 "FROM dbo.Users " +
+                                 "WHERE Username = @Username";
 
             command.Parameters.Add("@Username", SqlDbType.NVarChar).Value = username;
 
-            SqlDataReader reader = command.ExecuteReader();
+            using SqlDataReader reader = command.ExecuteReader();
             if (reader.Read())
                 return ReadNextUser(reader);
 
@@ -69,55 +76,98 @@ namespace Isi.ShoppingApp.Data.Repositories
 
         public HashedPassword GetUserPassword(string username)
         {
-            SqlConnection connection = new SqlConnection(connectionString);
+            return new HashedPassword(GetPasswordSalt(username), GetPasswordHash(username));
+        }
+
+        private byte[] GetPasswordSalt(string username)
+        {
+            using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
 
-            SqlCommand command = connection.CreateCommand();
-            command.CommandText = "SELECT PasswordSalt, PasswordHash " +
-                                  "FROM dbo.Users " +
-                                  "WHERE Username = @Username";
+            using SqlCommand command = connection.CreateCommand();
+            command.CommandText = "SELECT PasswordSalt FROM dbo.Users WHERE Username = @Username";
 
             command.Parameters.Add("@Username", SqlDbType.NVarChar).Value = username;
 
             SqlDataReader reader = command.ExecuteReader();
             if (reader.Read())
-                return ReadNextUser(reader).HashedPassword;
+                return (byte[])reader.GetValue("PasswordSalt");
 
             return null;
         }
 
-        public User CreateUser(User user)
+        private byte[] GetPasswordHash(string username)
         {
-            SqlConnection connection = new SqlConnection(connectionString);
+            using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
 
-            SqlCommand command = connection.CreateCommand();
-            command.CommandText = "INSERT INTO dbo.UserDatabase (FirstName, LastName, Username, PasswordSalt, PasswordHash, Admin, Balance) " +
-                "VALUES(@FirstName, @LastName, @Username, @PasswordSalt, @PasswordHash, @Admin, @Balance)";
+            using SqlCommand command = connection.CreateCommand();
+            command.CommandText = "SELECT PasswordHash FROM dbo.Users WHERE Username = @Username";
+
+            command.Parameters.Add("@Username", SqlDbType.NVarChar).Value = username;
+
+            SqlDataReader reader = command.ExecuteReader();
+            if (reader.Read())
+                return (byte[])reader.GetValue("PasswordHash"); ;
+
+            return null;
+            
+        }
+
+        public User CreateUser(User user)
+        {
+            using SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            using SqlCommand command = connection.CreateCommand();
+            command.CommandText = "INSERT INTO dbo.Users VALUES (@FirstName, @LastName, @Username, @PasswordSalt, @PasswordHash, @Admin, @Balance)";
 
             command.Parameters.Add("@FirstName", SqlDbType.NVarChar).Value = user.FirstName;
             command.Parameters.Add("@LastName", SqlDbType.NVarChar).Value = user.LastName;
             command.Parameters.Add("@Username", SqlDbType.NVarChar).Value = user.Username;
             command.Parameters.Add("@PasswordSalt", SqlDbType.VarBinary).Value = user.HashedPassword.Salt;
-            command.Parameters.Add("@PasswordHash", SqlDbType.NVarChar).Value = user.HashedPassword.Hash;
-            command.Parameters.Add("@Admin", SqlDbType.NVarChar).Value = user.IsAdmin;
-            command.Parameters.Add("@Balance", SqlDbType.NVarChar).Value = user.Balance;
+            command.Parameters.Add("@PasswordHash", SqlDbType.VarBinary).Value = user.HashedPassword.Hash;
+            command.Parameters.Add("@Admin", SqlDbType.Bit).Value = user.IsAdmin;
+            command.Parameters.Add("@Balance", SqlDbType.Decimal).Value = user.Balance;
 
-            return new User(user.FirstName, user.LastName, user.Username, user.HashedPassword, user.IsAdmin);
+            return new User(user.FirstName, user.LastName, user.Username, user.HashedPassword, user.IsAdmin, user.Balance);
         }
 
         public bool DeleteUser(string username)
         {
-            SqlConnection connection = new SqlConnection(connectionString);
+            using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
 
-            SqlCommand command = connection.CreateCommand();
-            command.CommandText = "DELETE FROM dbo.UserDatabase WHERE Username = @Username";
+            using SqlCommand command = connection.CreateCommand();
+            command.CommandText = "DELETE FROM dbo.Users WHERE Username = @Username";
 
             command.Parameters.Add("@Username", SqlDbType.NVarChar).Value = username;
 
             int rowsChanged = command.ExecuteNonQuery();
             return (rowsChanged > 0);
         }
+
+        public bool UpdateUser(User user)
+        {
+            using SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            using SqlCommand command = connection.CreateCommand();
+            command.CommandText = "UPDATE dbo.Users SET FirstName = @FirstName, LastName = @LastName, Username = @Username, " +
+                                   "PasswordSalt = @PasswordSalt, PasswordHash = @PasswordHash, Admin = @Admin, Balance = @Balance";
+
+            command.Parameters.Add("@FirstName", SqlDbType.NVarChar).Value = user.FirstName;
+            command.Parameters.Add("@LastName", SqlDbType.NVarChar).Value = user.LastName;
+            command.Parameters.Add("@Username", SqlDbType.NVarChar).Value = user.Username;
+            command.Parameters.Add("@PasswordSalt", SqlDbType.VarBinary).Value = user.HashedPassword.Salt;
+            command.Parameters.Add("@PasswordHash", SqlDbType.VarBinary).Value = user.HashedPassword.Hash;
+            command.Parameters.Add("@Admin", SqlDbType.Bit).Value = user.IsAdmin;
+            command.Parameters.Add("@Balance", SqlDbType.Decimal).Value = user.Balance;
+
+
+            int rowsChanges = command.ExecuteNonQuery();
+            return rowsChanges > 0;
+        }
+
     }
 }

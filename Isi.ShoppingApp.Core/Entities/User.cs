@@ -2,70 +2,79 @@
 
 namespace Isi.ShoppingApp.Core.Entities
 {
-     public class User
+    public class User
     {
-        private int MaxCharacter = 10;
-
+        private string firstName;
         public string FirstName
         {
             get => firstName;
             set
             {
-                if (IsNameValid(value))
+                if (IsStringValid(value))
+                {
                     firstName = value;
+                }
             }
         }
-        private string firstName;
 
+        private string lastName;
         public string LastName
         {
             get => lastName;
             set
             {
-                if (IsNameValid(value))
+                if (IsStringValid(value))
+                {
                     lastName = value;
+                }
             }
         }
-        private string lastName;
 
         public string FullName
         {
             get => firstName + " " + lastName;
         }
 
+
+        private string username;
         public string Username
         {
             get => username;
             private set
             {
-                if(IsInputValid(value))
+                if (IsStringValid(value))
+                {
                     username = value;
+                }
             }
-                
-        }
-        private string username;
 
+        }
+
+        private string password;
         public string Password
         {
             get => password;
-            private set
+            set
             {
-                if(IsInputValid(value))
+                if(!string.IsNullOrWhiteSpace(value))
                     password = value;
             }
         }
-        private string password;
 
-        public HashedPassword HashedPassword 
-        { 
+        private HashedPassword hashedPassword;
+        public HashedPassword HashedPassword
+        {
             get => hashedPassword;
             private set
             {
-                hashedPassword = CreateHashedPassword(Password);
+                if(value != null)
+                {
+                    hashedPassword = value;
+                }
             }
         }
-        private HashedPassword hashedPassword;
 
+        private decimal balance;
         public decimal Balance
         {
             get => balance;
@@ -75,8 +84,9 @@ namespace Isi.ShoppingApp.Core.Entities
                     balance = value;
             }
         }
-        private decimal balance;
 
+
+        private bool isAdmin;
         public bool IsAdmin
         {
             get => isAdmin;
@@ -85,45 +95,22 @@ namespace Isi.ShoppingApp.Core.Entities
                 isAdmin = value;
             }
         }
-        private bool isAdmin;
 
-        public User(string firstName, string lastName, string username, HashedPassword hashedPassword, bool isAdmin)
+
+       public User(string firstName, string lastName, string username, HashedPassword hashedPassword, bool isAdmin, decimal balance)
+       {
+           FirstName = firstName;
+           LastName = lastName;
+           Username = username;
+           HashedPassword = hashedPassword;
+           IsAdmin = isAdmin;
+           Balance = balance;
+       
+       }
+
+        private bool IsStringValid(string input)
         {
-            FirstName = firstName;
-            LastName = lastName;
-            Username = username;
-            HashedPassword = CreateHashedPassword(Password);
-            IsAdmin = isAdmin;
-            Balance = 0;
-        }
-
-        private HashedPassword CreateHashedPassword(string password)
-        {
-            
-            if(IsInputValid(password))
-            {
-                HashedPassword hashedPassword = PasswordHasher.HashPassword(password);
-                return hashedPassword;
-            }
-            
-            return null;
-        }
-
-        private bool IsNameValid(string name)
-        {
-            if (!string.IsNullOrWhiteSpace(name))
-                return true;
-
-            return false;
-        }
-
-        private bool IsInputValid(string input)
-        {
-            if (!string.IsNullOrWhiteSpace(input)
-                && input.Length <= MaxCharacter)
-                return true;
-
-            return false;
+            return !string.IsNullOrWhiteSpace(input);
         }
 
         public void AddAmountToBalance(decimal amount)
@@ -137,5 +124,11 @@ namespace Isi.ShoppingApp.Core.Entities
             if (amount <= Balance)
                 Balance -= amount;
         }
-     }
+
+        public override string ToString()
+        {
+            return $"Name: {FullName}, Username: {Username} ";
+        }
+
+    }
 }

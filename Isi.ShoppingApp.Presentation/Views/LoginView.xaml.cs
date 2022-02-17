@@ -1,4 +1,5 @@
 ﻿using Isi.ShoppingApp.Presentation.ViewModels;
+using Isi.Utility.Authentication;
 using System;
 using System.Diagnostics;
 using System.Windows;
@@ -7,16 +8,16 @@ namespace Isi.ShoppingApp.Presentation.Views
 {
     public partial class LoginView : Window
     {
+        LoginViewModel viewModel;
         public LoginView()
         {
             InitializeComponent();
-            LoginViewModel viewModel = new LoginViewModel();
+            viewModel = new LoginViewModel();
             DataContext = viewModel;
             viewModel.LoginSucceeded += OnLoginSucceeded;
             signUpButton.Click += OnSignUpButtonClicked;
         }
 
-        //TODO open one window
         private void OnSignUpButtonClicked(object sender, RoutedEventArgs e)
         {
             SignUpView signUpView = new SignUpView();
@@ -32,6 +33,16 @@ namespace Isi.ShoppingApp.Presentation.Views
             Trace.WriteLine("Opening main window");
         }
 
-        //TODO GET SECURED PASSWORD
+        private void passwordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            viewModel.LoginCommand.NotifyCanExecuteChanged();
+            viewModel.Password = passwordBox.Password; //TODO
+        }
+
+        private void ClearFields()
+        {
+            usernameTextBox.Clear();
+        }
+
     }
 }

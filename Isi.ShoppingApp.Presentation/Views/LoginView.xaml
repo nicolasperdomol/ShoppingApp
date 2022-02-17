@@ -42,12 +42,13 @@
 
             <DockPanel>
                 <Label Content="Username"/>
-                <TextBox Text="{Binding Path=Username, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox x:Name="usernameTextBox" Text="{Binding Path=Username, UpdateSourceTrigger=PropertyChanged}"/>
             </DockPanel>
 
             <DockPanel>
                 <Label Content="Password "/>
-                <TextBox Text="{Binding Path=Password, UpdateSourceTrigger=PropertyChanged}"/>
+                <PasswordBox x:Name="passwordBox"
+                             PasswordChanged="passwordBox_PasswordChanged"/>
             </DockPanel>
 
             <DockPanel Margin="5">
@@ -63,7 +64,6 @@
                Foreground="DarkGray"/>
                 <Button Name="signUpButton"
                     Content="Sign up"
-                    Click="OnSignUpButtonClicked"
                     BorderBrush="Transparent"
                     Background="Transparent"
                     HorizontalAlignment="Left"

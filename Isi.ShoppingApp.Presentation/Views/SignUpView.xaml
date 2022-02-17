@@ -66,13 +66,14 @@
             <StackPanel>
                 <Label Content="Username"/>
                 <TextBox Text="{Binding Path=Username, UpdateSourceTrigger=PropertyChanged}"
-                         ToolTip="Must be a maximum of 10 characters and cannot contain spaces."/>
+                         ToolTip="Username cannot contain spaces."/>
             </StackPanel>
 
             <StackPanel>
                 <Label Content="Password "/>
-                <TextBox Text="{Binding Path=Password, UpdateSourceTrigger=PropertyChanged}"
-                         ToolTip="Must be a maximum of 10 characters and cannot contain spaces."/>
+                <PasswordBox x:Name="passwordBox"
+                         ToolTip="Password cannot contain spaces."
+                             PasswordBox.PasswordChanged="PasswordBox_PasswordChanged"/>
             </StackPanel>
 
             <Separator/>

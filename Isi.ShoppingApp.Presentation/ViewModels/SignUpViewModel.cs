@@ -1,4 +1,5 @@
 ﻿using Isi.ShoppingApp.Core.Entities;
+using Isi.ShoppingApp.Domain.Services;
 using Isi.Utility.Authentication;
 using Isi.Utility.ViewModels;
 using System;
@@ -11,24 +12,18 @@ using System.Windows;
 namespace Isi.ShoppingApp.Presentation.ViewModels
 {
     public delegate void SignUpSucceededHandler(string message);
-
+    public delegate void SignUpFailedHandler(string message);
 
     class SignUpViewModel : ViewModel
     {
+        UserService userService;
         public DelegateCommand SignUpCommand { get; }
 
         public event SignUpSucceededHandler SignUpSucceeded;
+        public event SignUpFailedHandler SignUpFailed;
 
-        //public SecureString SecuredPassword
-        //{
-        //    get => securedPassword;
-        //    set
-        //    {
-        //        securedPassword = value;
-        //    }
-        //}
-        //private SecureString securedPassword;
 
+        private string firstName;
         public string FirstName
         {
             get => firstName;
@@ -42,8 +37,8 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
                 }
             }
         }
-        private string firstName;
 
+        private string lastName;
         public string LastName
         {
             get => lastName;
@@ -57,13 +52,13 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
                 }
             }
         }
-        private string lastName;
 
         public string FullName
         {
             get => firstName + " " + lastName;
         }
 
+        private string username;
         public string Username
         {
             get => username;
@@ -79,36 +74,23 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
             }
 
         }
-        private string username;
 
-
-        public string Password
-        {
-
-            get => password;
-            set
-            {
-                if (IsInputValid(value))
-                {
-                    password = value;
-                    NotifyPropertyChanged(nameof(Password));
-                    SignUpCommand.NotifyCanExecuteChanged();
-                }
-
-            }
-        }
-        private string password;
-
+        private HashedPassword hashedPassword;
         public HashedPassword HashedPassword
         {
             get => hashedPassword;
             set
             {
-                hashedPassword = PasswordHasher.HashPassword(Password);
+                if (value != null)
+                {
+                    hashedPassword = value;
+                    NotifyPropertyChanged(nameof(HashedPassword));
+                }
             }
         }
-        private HashedPassword hashedPassword;
 
+
+        private bool isAdmin;
         public bool IsAdmin
         {
             get => isAdmin;
@@ -117,19 +99,31 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
                 isAdmin = value;
             }
         }
-        private bool isAdmin;
+
+        private decimal balance;
+        public decimal Balance
+        {
+            get => balance;
+            set
+            {
+                if (value > 0)
+                    balance = value;
+            }
+        }
 
         public SignUpViewModel()
         {
+            userService = new UserService();
             SignUpCommand = new DelegateCommand(SignUp, CanSignUp);
         }
 
+        //TODO
         private bool CanSignUp(object _)
         {
             return !string.IsNullOrWhiteSpace(firstName)
                 && !string.IsNullOrWhiteSpace(lastName)
                 && !string.IsNullOrWhiteSpace(username)
-                && !string.IsNullOrWhiteSpace(password);
+                && hashedPassword != null;
         }
 
         private void SignUp(object _)
@@ -137,11 +131,10 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
 
             if (CanSignUp(_))
             {
-               //IsAdmin = false;
-               //User user = new User(FirstName, LastName, Username, HashedPassword, IsAdmin);
+               userService.AddUser(new User(FirstName, LastName, Username, HashedPassword, IsAdmin, Balance));
                SignUpSucceeded?.Invoke("Successfully created your account.");
-                Trace.WriteLine("Signing up"); //FOR TESTING PURPOSES
             }
+            SignUpFailed?.Invoke("Could not successfully sign up");
         }
 
 
@@ -150,20 +143,12 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
             FirstName = "";
             LastName = "";
             Username = "";
-            Password = "";
+            HashedPassword = null;
         }
 
         private bool IsInputValid(string input)
         {
-            if (!string.IsNullOrWhiteSpace(input))
-            {
-                return true;
-            }
-            else
-            {
-                MessageBox.Show("Username and password can only contain 9 characters and cannot contain spaces", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
+            return !string.IsNullOrWhiteSpace(input);
         }
 
     }

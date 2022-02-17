@@ -1,37 +1,31 @@
 ﻿using Isi.ShoppingApp.Presentation.ViewModels;
+using Isi.Utility.Authentication;
 using System.Windows;
 
 namespace Isi.ShoppingApp.Presentation.Views
 {
     public partial class SignUpView : Window
     {
-        private const int MaxCharacter = 9;
+        SignUpViewModel viewModel;
         public SignUpView()
         {
-            SignUpViewModel viewModel = new SignUpViewModel();
+            viewModel = new SignUpViewModel();
             InitializeComponent();
             DataContext = viewModel;
             viewModel.SignUpSucceeded += OnSignUpSucceeded;
         }
 
-       //TODO GET SECURED PASSWORD
-       //private void OnSignUpClicked()
-       //{
-       //    LoginViewModel loginView = new LoginViewModel();
-       //    if (passwordField.Password != null
-       //        && passwordField.Password.Length <= MaxCharacter)
-       //    {
-       //        SignUpViewModel signUpViewModel = new SignUpViewModel();
-       //        signUpViewModel.Password = passwordField.Password;
-       //    }
-       //}
         private void OnSignUpSucceeded(string message)
         {
-            MessageBox.Show(message, "Creating account", MessageBoxButton.OK, MessageBoxImage.Information);
-            
             LoginView loginView = new LoginView();
             loginView.Show();
             this.Close();
+        }
+
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            viewModel.SignUpCommand.NotifyCanExecuteChanged();
+            viewModel.HashedPassword = PasswordHasher.HashPassword(passwordBox.Password);
         }
     }
 }
