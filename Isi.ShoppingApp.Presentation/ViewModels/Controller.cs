@@ -12,19 +12,34 @@ using System.Windows.Controls;
 
 
 
+
 namespace Isi.ShoppingApp.Presentation.ViewModels
 {
     public class Controller : Isi.Utility.ViewModels.ViewModel
     {
-        public DelegateCommand IncreaseAmountToBuy{ get; }
-        public DelegateCommand DecreaseAmountToBuy{ get; }
+        public DelegateCommand IncreaseAmountToBuy { get; }
+        public DelegateCommand DecreaseAmountToBuy { get; }
+        public DelegateCommand OnBuyNowHandler { get; }
+        public DelegateCommand OnAddToCartHandler { get; }
 
-        public int AmountToBuy 
+        public Product ProductToCart
+        {
+            get => productToCart;
+            private set
+            {
+                productToCart = value;
+                AmountToCart = AmountToBuy;
+            }
+        }
+
+        public int AmountToCart { get; private set; }
+        
+        public int AmountToBuy
         {
             get => amountToBuy;
             set
             {
-                if(value>0)
+                if (value > 0)
                 {
                     amountToBuy = value;
                     NotifyPropertyChanged(nameof(AmountToBuy));
@@ -48,87 +63,53 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
         }
 
 
-        public long Id { get; }
-
-        public string Name
+        //SHOPPING CART ========================================================================================================================================================
+        public ObservableCollection<Product>ShoppingCart
         {
-            get => name;
+            get => shoppingCart;
             set
             {
-                name = value;
+                shoppingCart = value;
+                NotifyPropertyChanged(nameof(ShoppingCart));
             }
         }
 
-        public string Category
-        {
-            get => category;
-            set
-            {
-                category = value;
-            }
-        }
+        public ProductService ProductService{ get => productService = new ProductService(); }
 
-        public string Description
-        {
-            get => description;
-            set
-            {
-                description = value;
-            }
-        }
-
-        public decimal Price
-        {
-            get => price;
-            set
-            {
-                price = value;
-            }
-        }
-
-        public int Quantity
-        {
-            get => quantity;
-            set
-            {
-                quantity = value;
-            }
-        }
-
-        public decimal? PercentageDiscount
-        {
-            get => percentageDiscount;
-            set
-            {
-                percentageDiscount = value;
-            }
-        }
-
-        private string name;
-        private string category;
-        private string description;
-        private decimal price;
-        private int quantity;
-        private decimal? percentageDiscount;
+        //PRODUCT ITEMS
+        
         private int amountToBuy;
 
         private Product productSelected;
+        private ProductService productService;
+
+
+        //INSTANCE OF USER
         public string User { get; set; }
-       
+
+
+        //USER CART
+        private ObservableCollection<Product> shoppingCart;
+        private Product productToCart;
+        private int amountToCart;
+        
         public Controller()
         {
             ProductSelected = Products[0];
             IncreaseAmountToBuy = new DelegateCommand(Increment, CanIncrement);
             DecreaseAmountToBuy = new DelegateCommand(Decrement);
+            OnBuyNowHandler = new DelegateCommand(BuyProduct, CanBuyProduct);
+            OnAddToCartHandler = new DelegateCommand(OnAddToCart);
 
+
+            ShoppingCart = new ObservableCollection<Product>();
             User = "Nicolas Perdomo";
             AmountToBuy = 1;
         }
 
         public ObservableCollection<Product> getInitialCollection()
         {
-            Inventory inventory = new Inventory();
-            return inventory.GetDBProducts();
+            return ProductService.GetDBProducts();
         }
 
 
@@ -150,6 +131,91 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
         {
             AmountToBuy--;
         }
-    }
 
+        private void BuyProduct(object _)
+        {
+            ProductSelected.Quantity -= AmountToBuy;
+            UpdateProduct(ProductSelected);
+            NotifyPropertyChanged(nameof(ProductSelected));
+        }
+
+        private bool CanBuyProduct(object _)
+        {
+            if (ProductSelected != null)
+                return true; //TODO CHECK IF THE USER CAN AFFORD THE TRANSACTION (USER.BALANCE)
+            return false; 
+        }
+
+        private void OnAddToCart(object _)
+        {
+            foreach (Product product in ShoppingCart)
+            {
+                //CASE 1: NEW PRODUCT: THEN ADD THE PRODUCT
+                if(ProductSelected.Id != product.Id)
+                {
+                    if((ProductSelected.Quantity + product.Quantity) < ProductSelected.Quantity)
+                    {
+                        //p
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+            }
+            //CASE 2: PRODUCT IS ALREADY IN THE SHOPPING CART: ADD QUANTITIES , VERIFY!
+
+            ProductToCart = ProductSelected;
+            ProductToCart.Quantity = AmountToCart;
+            ShoppingCart.Add(ProductToCart);
+        }
+
+        //IF EVERYTHING WORKS CHANGE PUBLIC => PRIVATE 
+        public Product AddProduct(Product product)
+        {
+            Product newProduct = ProductService.AddProduct(product);
+            NotifyPropertyChanged(nameof(Products));
+            return newProduct;
+        }
+
+        //IF EVERYTHING WORKS CHANGE PUBLIC => PRIVATE 
+        public bool RemoveProduct(Product product)
+        {
+            bool success = ProductService.RemoveProduct(product);
+            NotifyPropertyChanged(nameof(Products));
+            return success;
+        }
+
+        //IF EVERYTHING WORKS CHANGE PUBLIC => PRIVATE 
+        public bool RemoveProduct(long id)
+        {
+            bool success = ProductService.RemoveProduct(id);
+            NotifyPropertyChanged(nameof(Products));
+            return success;
+        }
+
+        //IF EVERYTHING WORKS CHANGE PUBLIC => PRIVATE 
+        public bool UpdateProduct(Product product)
+        {
+            bool success = productService.UpdateProduct(product);
+            NotifyPropertyChanged(nameof(Products));
+            return success;
+        }
+
+
+        /*TODO
+         * 1. DO METHOD ACTION FOR BuyNow Button.
+         * 2. DO METHOD ACTION FOR ShoppingCart
+         * 3. DO METHOD ACTION FOR Add to Cart
+         * 4. Create button add to cart
+         * 5. create list<Porducts> ShoppingCart
+         *    DO remove all items from shopping cart
+         *    Notify shopping cart when adding to cart.
+         * FINAL: GET BALANCE FROM USER [if it is valid to buy the product (amount * price):]
+         * REMOVE AmountToBuy from the selected product.
+         * 
+         * EXTRA: LINK 1:1 IMAGE:PRODUCT
+         */
+    }
 }

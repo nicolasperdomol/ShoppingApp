@@ -33,11 +33,76 @@ namespace Isi.ShoppingApp.Presentation.Views
 
         private void OnItemButtonClicked(object sender, RoutedEventArgs e)
         {
-            Inventory inventory = new Inventory();
-            CartPanel.Visibility = Visibility.Visible;
+            ProductService productService = new ProductService();
+            ModifyCartPanelView();
             long ButtonId = (long)(sender as Button).Tag;
-            this.Width = 900;
-            controller.ProductSelected = inventory.GetProduct(ButtonId);
+            CartPanel.MinWidth = 200;
+            Width = Inventory.Width + CartPanel.Width + ShoppingCartDropdown.Width;
+            controller.ProductSelected = productService.GetProduct(ButtonId);
+        }
+
+        private void ModifyCartPanelView()
+        {
+            CartPanel.Visibility = Visibility.Visible;
+            CartPanel.MaxHeight = 250;
+            CartPanel.MinHeight = 200;
+            CartPanel.Height = Inventory.Height;
+        }
+
+        private void OnUserButtonClicked(object sender, RoutedEventArgs e)
+        {
+            
+            if (!IsUserPanelVisible())
+            {
+                
+                HideShoppingCartPanel();
+                UserDropdown.Visibility = Visibility.Visible;
+                UserDropdown.Height = 30;
+            }
+
+            else
+            {
+                HideUserPanel();
+            }
+        }
+
+        private void HideUserPanel()
+        {
+            UserDropdown.Visibility = Visibility.Hidden;
+            UserDropdown.Height = 0;
+        }
+
+        private void OnShoppingCartButtonClicked(object sender, RoutedEventArgs e)
+        {
+            if (!IsShoppingCartVisible())
+            {
+                ShoppingCartDropdown.Visibility = Visibility.Visible;
+                ShoppingCartDropdown.MinWidth = 100;
+                HideUserPanel();
+            }
+
+            else
+            { 
+                HideShoppingCartPanel();
+            }
+
+            Width = 1000;
+        }
+
+        private void HideShoppingCartPanel()
+        {
+            ShoppingCartDropdown.Visibility = Visibility.Hidden;
+            ShoppingCartDropdown.Width = 0;
+        }
+
+        private bool IsShoppingCartVisible()
+        {
+            return ShoppingCartDropdown.Visibility == Visibility.Visible;
+        }
+
+        private bool IsUserPanelVisible()
+        {
+            return UserDropdown.Visibility == Visibility.Visible;
         }
     }
 }

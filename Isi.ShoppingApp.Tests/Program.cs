@@ -10,7 +10,7 @@ namespace Isi.ShoppingApp.Tests
     {
         static void Main(string[] args)
         {
-            Isi.ShoppingApp.Domain.Services.Inventory inventory = new Domain.Services.Inventory();
+            Isi.ShoppingApp.Domain.Services.ProductService inventory = new Domain.Services.ProductService();
 
         }
     }
