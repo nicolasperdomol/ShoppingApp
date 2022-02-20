@@ -33,7 +33,7 @@ namespace Isi.ShoppingApp.Data.Repositories
             return count > 0;
         }
 
-        public Product GetProduct(int id)
+        public Product GetProduct(long id)
         {
             SqlConnection connection = new(connectionString);
             connection.Open();
@@ -183,7 +183,7 @@ namespace Isi.ShoppingApp.Data.Repositories
             return rowsAffected > 0;
         }
 
-        public bool RemoveProduct(int id)
+        public bool RemoveProduct(long id)
         {
             SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();

@@ -4,26 +4,27 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Isi.ShoppingApp.Presentation.Views"
-        
-        xmlns:toolkit ="using:WinRTXamlToolkit.Controls"
+        xmlns:viewModel ="clr-namespace:Isi.ShoppingApp.Presentation.ViewModels"
         mc:Ignorable="d"
-        Title="Shop" Height="450" Width="800">
-
+        Title="Shop" Height="450" Width="900">
+    
+    
     <DockPanel Name="Header">
         <StackPanel Background="#FFBA24" DockPanel.Dock="Top" MinHeight="30px">
             <DockPanel Margin="40,10,40,10">
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                    <Label FontSize="19px" FontFamily="Helvetica" FontWeight="DemiBold">ShopApp</Label>
+                    <Label FontSize="19px" FontFamily="Helvetica" FontWeight="DemiBold">ShoppingApp</Label>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
-                    <Button Background="white" Width="30" Height="30" BorderThickness="0.8">
-                        <StackPanel>
-                            <Image Source="Img/Icons/user.png" MaxWidth="15px"/>
-
+                    <Button Background="white" Height="30" BorderThickness="0.8" Click="OnUserButtonClicked">
+                        <StackPanel Orientation="Horizontal"  Margin="14,0,14,0">
+                            <Image Source="Img/Icons/user.png" MaxWidth="15px" Margin="0,0,14,0"/>
+                            <TextBlock Text="Hi, "/>
+                            <TextBlock Text="{Binding Path=User}"/>
                         </StackPanel>
                     </Button>
-                    <Button Background="white" Width="30" Height="30" BorderThickness="0.8" Margin="5,0,0,0">
+                    <Button Background="white" Width="30" Height="30" BorderThickness="0.8" Margin="5,0,20,0" Click="OnShoppingCartButtonClicked">
                         <StackPanel>
                             <Image Source="Img/Icons/shopping-cart.png" MaxWidth="15px"/>
                         </StackPanel>
@@ -32,52 +33,117 @@
             </DockPanel>
         </StackPanel>
 
-
         <StackPanel Name="Body" DockPanel.Dock="Bottom" Background="#ECECEC">
-            <StackPanel Margin="40,0,40,0" Background="white">
 
-                <StackPanel>
-                    <DataGrid ItemsSource="{Binding Path=Products}" SelectionMode="Single"/>
-                </StackPanel>
+            <DockPanel>
 
-                <StackPanel Margin="20">
-                    <ItemsControl ItemsSource="{Binding Path=Products}">
+                <StackPanel Margin="40,0,0,0" Background="white" DockPanel.Dock="Left">
+                    <StackPanel Margin="20">
+                        <ItemsControl ItemsSource="{Binding Path=Products}" Name="Inventory">
 
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="5"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="5"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
 
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <DataTemplate.Resources>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Background" Value="#ECECEC"/>
-                                    </Style>
-                                </DataTemplate.Resources>
-                                <Grid>
-                                    <StackPanel Margin="10">
-                                        <TextBlock Text="{Binding Path=Id}"/>
-                                        <TextBlock Text="{Binding Path=Name}"/>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <DataTemplate.Resources>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Background" Value="#ECECEC"/>
+                                        </Style>
+                                    </DataTemplate.Resources>
+                                    <Grid>
+                                        <StackPanel Margin="10,10,10,10">
 
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,5" HorizontalAlignment="Center">
-                                            <Button Content="&lt;"/>
-                                            <TextBlock Text="1"/>
-                                            <Button Content=">"/>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Text="$" FontSize="16"/>
+                                                <TextBlock Text="{Binding Path=Price}" FontSize="16" Margin="0,0,0,3" FontWeight="DemiBold"/>
+                                            </StackPanel>
+
+
+                                                
+                                             <TextBlock Text="{Binding Path=Name}"/>
+                                             <StackPanel Orientation="Horizontal" Margin="0,0,0,5" HorizontalAlignment="Center">
+                                                 <TextBlock Text="Stock: "/>
+                                                 <TextBlock Text="{Binding Path=Quantity}"/>
+                                                 <TextBlock Text=" item(s)."/>
+                                             </StackPanel>
+
+
+
+                                            <Button Tag="{Binding Path=Id}" 
+                                                    Content="Add to Cart" 
+                                                    Click="OnItemButtonClicked" 
+                                                    Background="#ffa857"/>
+
                                         </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
 
-                                        <Button Content="Add to Cart"/>
+                        </ItemsControl>
+                    </StackPanel>
 
-                                    </StackPanel>
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-
-                    </ItemsControl>
                 </StackPanel>
 
-            </StackPanel>
+
+                <StackPanel Name="UserDropdown" DockPanel.Dock="Top" Background="#f7f7f7" Margin="0,0,60,0" Visibility="Hidden" Height="0">
+                    <StackPanel Margin="10" HorizontalAlignment="Center">
+                        <Button Background="#f7f7f7" Foreground="DarkBlue" Content="a" BorderThickness="0"  VerticalAlignment="Center" />
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Name="ShoppingCartDropdown" DockPanel.Dock="Right" Background="#f7f7f7" Margin="0,0,60,0" Visibility="Hidden" Width="0">
+                    <StackPanel HorizontalAlignment="Center"  VerticalAlignment="Center">
+                        <ItemsControl ItemsSource="{Binding Path=ShoppingCart, UpdateSourceTrigger=PropertyChanged}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Rows="1"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <DataTemplate.Resources>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="FontWeight" Value="DemiBold"/>
+                                        </Style>
+                                    </DataTemplate.Resources>
+
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Path=Name}"/>
+                                        <TextBlock Text="{Binding Path=Quantity}"/>
+                                        <TextBlock Text="{Binding Path=Price}"/>
+                                    </StackPanel>
+                                    
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </StackPanel>
+
+
+                <StackPanel DockPanel.Dock="Left" Name="CartPanel" Visibility="Hidden" Background="#c7c7c7" MaxWidth="200" Height="0">
+                    <StackPanel Margin="40,30,40,0" Background="DarkGray">
+                        <TextBlock Text="{Binding Path=ProductSelected.Price}" Margin="0,30,0,0"/>
+                        <TextBlock Text="{Binding Path=ProductSelected.Name}"/>
+                        <TextBlock Text="{Binding Path=ProductSelected.Category}"/>
+                        <TextBlock Text="{Binding Path=ProductSelected.Description}"/>
+                        <TextBlock Text="{Binding Path=ProductSelected.Quantity}"/>
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button Content="&lt;" Command="{Binding Path=DecreaseAmountToBuy}"/>
+                            <TextBlock Text="{Binding Path=AmountToBuy}"/>
+                            <Button Content=">" Command="{Binding Path=IncreaseAmountToBuy}"/>
+                        </StackPanel>
+                        
+                    </StackPanel>
+                    <Button Content="Add To Cart" Background="#f7f7f7" Margin="40,0,40,10" Command="{Binding Path=OnAddToCartHandler}"/>
+                    <Button Content="Buy Now" Background="#f7f7f7" Margin="40,0,40,0" Command="{Binding Path=OnBuyNowHandler}"/>
+                </StackPanel>
+            </DockPanel>
+            
         </StackPanel>
     </DockPanel>
 

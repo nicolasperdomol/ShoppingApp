@@ -24,6 +24,7 @@ namespace Isi.ShoppingApp.Core.Entities
         public int Quantity { get; set; }
         public decimal? PercentageDiscount { get; set; }
 
+        public int AvailableAmountCount { get; set; }
 
         private decimal finalPrice;
 
@@ -36,6 +37,8 @@ namespace Isi.ShoppingApp.Core.Entities
             Price = price;
             Quantity = quantity;
             PercentageDiscount = percentageDiscount;
+
+            AvailableAmountCount = 1;
         }
 
         public Product(string name, string category, string description, decimal price, int quantity ,decimal? percentageDiscount)
