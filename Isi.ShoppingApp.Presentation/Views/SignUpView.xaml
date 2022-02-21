@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Isi.ShoppingApp.Presentation.Views"
-        mc:Ignorable="d" Title="Sign Up" Width="285" Height="400">
+        mc:Ignorable="d" Title="Sign Up" MaxWidth="285" MaxHeight="400">
 
     <Window.Resources>
         <Style TargetType="Label">
@@ -45,13 +45,12 @@
             BorderBrush="#FFBA24"
             Margin="5"
             CornerRadius="3">
-
         <StackPanel Margin="10"
                 Width="240">
-
+            
             <Border CornerRadius="3" BorderThickness="1"
                     BorderBrush="#FFBA24">
-                    <Label Content="Sign up"
+                <Label Content="Sign up"
                FontWeight="Bold"
                FontSize="14"
                    Foreground="White"
@@ -61,41 +60,39 @@
             </Border>
 
             <Separator/>
-            
+
             <StackPanel>
-                    <Label Content="First Name"/>
-                    <TextBox Text="{Binding Path=FirstName, UpdateSourceTrigger=PropertyChanged}"/>
-                </StackPanel>
+                <Label Content="First Name"/>
+                <TextBox Text="{Binding Path=FirstName, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
 
-                <StackPanel>
-                    <Label Content="Last Name"/>
-                    <TextBox Text="{Binding Path=LastName, UpdateSourceTrigger=PropertyChanged}"/>
-                </StackPanel>
+            <StackPanel>
+                <Label Content="Last Name"/>
+                <TextBox Text="{Binding Path=LastName, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
 
-                <Separator/>
-                
-                <StackPanel>
-                    <Label Content="Username"/>
-                    <TextBox Text="{Binding Path=Username, UpdateSourceTrigger=PropertyChanged}"
+            <Separator/>
+
+            <StackPanel>
+                <Label Content="Username"/>
+                <TextBox Text="{Binding Path=Username, UpdateSourceTrigger=PropertyChanged}"
                              ToolTip="Username cannot contain spaces or special characters and must be in lowercase."/>
-                </StackPanel>
+            </StackPanel>
 
-                <StackPanel>
-                    <Label Content="Password "/>
-                    <PasswordBox x:Name="passwordBox"
+            <StackPanel>
+                <Label Content="Password "/>
+                <PasswordBox x:Name="passwordBox"
                                  PasswordBox.PasswordChanged="PasswordBox_PasswordChanged"/>
-                </StackPanel>
+            </StackPanel>
 
-                <Separator/>
+            <Separator/>
 
             <DockPanel>
                 <Button Content="Create account"
                             Command="{Binding Path=SignUpCommand}"
                             Width="100"/>
             </DockPanel>
- 
 
         </StackPanel>
     </Border>
-    
 </Window>

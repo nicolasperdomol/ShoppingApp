@@ -18,9 +18,11 @@ namespace Isi.ShoppingApp.Presentation.Views
             InitializeComponent();
             viewModel = new LoginViewModel();
             DataContext = viewModel;
+
             viewModel.LoginSucceeded += OnLoginSucceeded;
             viewModel.FailedLogin += OnLoginFailed;
             signUpButton.Click += OnSignUpButtonClicked;
+
             service = new UserService();
         }
 
@@ -40,7 +42,8 @@ namespace Isi.ShoppingApp.Presentation.Views
 
         private void OnLoginSucceeded()
         {
-            MessageBox.Show("Logged in. Opening main window");
+            MessageBox.Show("Logged in. Opening main window"); //FOR TESTING PURPOSES
+            User user = service.GetUser(viewModel.Username);
             if (viewModel.IsAdmin)
             {
                 //open admin window and pass user
@@ -48,7 +51,6 @@ namespace Isi.ShoppingApp.Presentation.Views
             }
             else
             {
-                User user = service.GetUser(viewModel.Username);
                 //MainWindow mainWindow = new MainWindow(user);
                 //mainWindow.Show();
                 this.Close();
@@ -64,9 +66,6 @@ namespace Isi.ShoppingApp.Presentation.Views
         private void ClearTextbox()
         {
             passwordBox.Clear();
-            viewModel.Username = null; //TODO
-            viewModel.Username = string.Empty;
-            viewModel.Username = "";
             usernameTextBox.Text = "";
         }
     }

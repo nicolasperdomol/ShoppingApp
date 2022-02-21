@@ -111,7 +111,7 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
                     }
                     else
                     {
-                        FailedLogin?.Invoke("Username or password is incorrect.");
+                        FailedLogin?.Invoke("Password is incorrect.");
                     }
                 }
                 else
