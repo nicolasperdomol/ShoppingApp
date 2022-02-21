@@ -25,26 +25,25 @@
             <Setter Property="Margin" Value="10"/>
             <Setter Property="FontWeight" Value="Medium"/>
             <Setter Property="Background" Value="WhiteSmoke"/>
-
         </Style>
     </Window.Resources>
 
 
     <Border BorderThickness="1"
-            BorderBrush="Orange"
+            BorderBrush="#FFBA24"
             Margin="5"
             CornerRadius="3">
         <StackPanel Margin="10">
 
             <Border BorderThickness="1" 
-                    BorderBrush="Orange"
+                    BorderBrush="#FFBA24"
                     CornerRadius="3">
                 <Label Content="Login" HorizontalContentAlignment="Center"
-               FontWeight="Bold"
-               FontSize="14"
-               Foreground="White"
-               Padding="10"
-                   Background="Orange"/>
+                       FontWeight="Bold"
+                       FontSize="14"
+                       Foreground="White"
+                       Padding="10"
+                       Background="#FFBA24"/>
             </Border>
 
             <Separator Height="15" Background="Transparent"/>
@@ -82,7 +81,7 @@
                     HorizontalAlignment="Left"
                     FontSize="9"
                     Width="45"
-                    Foreground="Orange"
+                    Foreground="#FFBA24"
                     Height="20"/>
             </DockPanel>
         </StackPanel>

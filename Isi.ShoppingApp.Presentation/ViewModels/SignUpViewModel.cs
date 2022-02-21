@@ -19,7 +19,6 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
         public event SignUpSucceededHandler SignUpSucceeded;
         public event SignUpFailedHandler SignUpFailed;
 
-
         private string firstName;
         public string FirstName
         {
@@ -128,11 +127,12 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
             if (CanSignUp(_))
             {
                userService.AddUser(new User(FirstName, LastName, Username, HashedPassword, IsAdmin, Balance));
-               SignUpSucceeded?.Invoke("Successfully created your account.");
+               SignUpSucceeded?.Invoke("Hurray! Your account has been successfully created.");
+                ClearFieldProperties();
             }
-            SignUpFailed?.Invoke("Could not successfully sign up");
+            SignUpFailed?.Invoke("Oops! Could not successfully sign up");
         }
-
+        
         private void ClearFieldProperties()
         {
             FirstName = "";
@@ -151,7 +151,6 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
             return IsInputValid(name)
                 && !ContainsPunctuation(name)
                 && !ContainsNumbers(name);
-
         }
 
         private bool IsUsernameValid(string username)
@@ -171,7 +170,9 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
                 if (input.Any(char.IsPunctuation))
                 {
                     containsPunctuation = true;
+                    break;
                 }
+          
             }
             return containsPunctuation;
         }
@@ -185,7 +186,9 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
                 if (input.Any(char.IsUpper))
                 {
                     containsUppercase = true;
+                    break;
                 }
+
             }
             return containsUppercase;
         }
@@ -199,6 +202,7 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
                 if (input.Any(char.IsDigit))
                 {
                     containsNumbers = true;
+                    break;
                 }
             }
             return containsNumbers;

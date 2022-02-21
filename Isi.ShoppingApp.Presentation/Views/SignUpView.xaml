@@ -42,7 +42,7 @@
     </Window.Resources>
 
     <Border BorderThickness="2"
-            BorderBrush="Orange"
+            BorderBrush="#FFBA24"
             Margin="5"
             CornerRadius="3">
 
@@ -50,14 +50,14 @@
                 Width="240">
 
             <Border CornerRadius="3" BorderThickness="1"
-                    BorderBrush="Orange">
+                    BorderBrush="#FFBA24">
                     <Label Content="Sign up"
                FontWeight="Bold"
                FontSize="14"
                    Foreground="White"
                Padding="10"
                    Width="240"
-                   Background="Orange"/>
+                   Background="#FFBA24"/>
             </Border>
 
             <Separator/>

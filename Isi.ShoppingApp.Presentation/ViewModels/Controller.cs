@@ -90,6 +90,7 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
         public User User { get; set; }
 
         public string FullName { get; set; }
+        
         private decimal balance;
         public decimal Balance
         {
@@ -119,6 +120,7 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
             ShoppingCart = new ObservableCollection<Product>();
             User = user;
             FullName = user.FullName;
+            Balance = user.Balance;
             AmountToBuy = 1;
         }
 
