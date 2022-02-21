@@ -27,7 +27,5 @@ We decided to implement a sign up feature in which users can create an account. 
 client features. We decided that admin users would be created internally, therefore there is no option to sign up as an admin. However, if a user is indeed an admin, they will have additional features and accessibility, such as changing prices, adding/removing products, updating product quantities as well as having access to user info.
 
 
-Remaining bugs:
-
-A bug that remains is when a user logs in with a wrong username or password, the username remains in the textfield. We have created a method to clear the textboxes and the Properties, however the username remains in the textbox although the password box clears out.
-
+Future considerations:
+An interesting feature that could be considered for the future is implemeting a button that reveals the password they have typed. This way, users could see if they have correctly entered their password or not.
