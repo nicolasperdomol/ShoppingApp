@@ -7,8 +7,7 @@
         xmlns:viewModel ="clr-namespace:Isi.ShoppingApp.Presentation.ViewModels"
         mc:Ignorable="d"
         Title="Shop" Height="450" Width="900">
-    
-    
+
     <DockPanel Name="Header">
         <StackPanel Background="#FFBA24" DockPanel.Dock="Top" MinHeight="30px">
             <DockPanel Margin="40,10,40,10">
@@ -100,7 +99,7 @@
                         <ItemsControl ItemsSource="{Binding Path=ShoppingCart, UpdateSourceTrigger=PropertyChanged}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <UniformGrid Rows="1"/>
+                                    <UniformGrid Columns="1"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
@@ -108,24 +107,64 @@
                                     <DataTemplate.Resources>
                                         <Style TargetType="TextBlock">
                                             <Setter Property="FontWeight" Value="DemiBold"/>
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
                                         </Style>
                                     </DataTemplate.Resources>
 
-                                    <StackPanel>
-                                        <TextBlock Text="{Binding Path=Name}"/>
-                                        <TextBlock Text="{Binding Path=Quantity}"/>
-                                        <TextBlock Text="{Binding Path=Price}"/>
-                                    </StackPanel>
-                                    
+                                    <DockPanel>
+                                        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Margin="0,15,0,0">
+                                            <Button Background="White" Margin="0,0,10,0" Tag="{Binding Path=Id}" Click="OnMinusButton">
+                                                <Image Source="Img/Icons/minus.png" Width="10" Height="10"/>
+                                            </Button>
+
+
+                                            <TextBlock Text="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Text="("/>
+                                            <TextBlock Text="{Binding Path=Quantity, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Text=")..." Margin="0,0,10,0"/>
+                                            
+                                        </StackPanel>
+                                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+                                            <TextBlock Text="{Binding Path=Price, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </StackPanel>
+                                    </DockPanel>
+
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
+
+                        <StackPanel Orientation="Vertical">
+                            <DockPanel>
+                                <Border DockPanel.Dock="Top" BorderThickness="0.5" Margin="0,20,0,10" BorderBrush="LightGray"/>
+                                <TextBlock Text="Tax:" FontSize="12" DockPanel.Dock="Left"/>
+                                
+                                <StackPanel Orientation="Horizontal"  DockPanel.Dock="Right" HorizontalAlignment="Right">
+                                    <TextBlock Text="CA$" FontSize="12" />
+                                    <TextBlock Text="{Binding Path=Tax}" FontSize="12" />
+                                </StackPanel>
+                                
+                            </DockPanel>
+                            <DockPanel>
+                                <TextBlock Text="Total:" FontSize="12" DockPanel.Dock="Left"/>
+                                <StackPanel Orientation="Horizontal"  DockPanel.Dock="Right" HorizontalAlignment="Right">
+                                    <TextBlock Text="CA$" FontSize="12" />
+                                    <TextBlock Text="{Binding Path=TotalPrice, UpdateSourceTrigger=PropertyChanged}" FontSize="12" />
+                                </StackPanel>
+                            </DockPanel>
+                        </StackPanel>
+                        
+                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                            <Button Margin="0,10,10,0" Background="White" Foreground="Gray" Content="Empty Cart" Command="{Binding Path=OnEmptyCartButton}"/>
+                            <Button Margin="0,10,0,0" Background="White" Content="Checkout" Command="{Binding Path=OnCheckoutButton}"/>
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
 
 
                 <StackPanel DockPanel.Dock="Left" Name="CartPanel" Visibility="Hidden" Background="#c7c7c7" MaxWidth="200" Height="0">
-                    <StackPanel Margin="40,30,40,0" Background="DarkGray">
+                    
+                    <StackPanel Margin="40,30,40,0" Background="DarkGray" >
+                        
                         <TextBlock Text="{Binding Path=ProductSelected.Price}" Margin="0,30,0,0"/>
                         <TextBlock Text="{Binding Path=ProductSelected.Name}"/>
                         <TextBlock Text="{Binding Path=ProductSelected.Category}"/>
@@ -133,18 +172,57 @@
                         <TextBlock Text="{Binding Path=ProductSelected.Quantity}"/>
 
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <Button Content="&lt;" Command="{Binding Path=DecreaseAmountToBuy}"/>
+                            <Button Content="&lt;" Command="{Binding Path=DecreaseAmountToBuy}" Margin="0,0,7,0"/>
                             <TextBlock Text="{Binding Path=AmountToBuy}"/>
-                            <Button Content=">" Command="{Binding Path=IncreaseAmountToBuy}"/>
+                            <Button Content=">" Command="{Binding Path=IncreaseAmountToBuy}" Margin="7,0,0,0"/>
                         </StackPanel>
                         
                     </StackPanel>
-                    <Button Content="Add To Cart" Background="#f7f7f7" Margin="40,0,40,10" Command="{Binding Path=OnAddToCartHandler}"/>
+                    <Button Content="Add To Cart" Background="#f7f7f7" Margin="40,0,40,10" Command="{Binding Path=OnAddToCartHandler}" Click="OpenCart"/>
                     <Button Content="Buy Now" Background="#f7f7f7" Margin="40,0,40,0" Command="{Binding Path=OnBuyNowHandler}"/>
                 </StackPanel>
             </DockPanel>
+
+            <StackPanel Margin="20" Name="AdminPanel" Orientation="Horizontal">
+
+                <Border Background="DarkGray" CornerRadius="10">
+                    <StackPanel Orientation="Vertical" Margin="5">
+                        <TextBlock Text="ADD NEW PRODUCTS: " Margin="0,10,0,20" FontSize="12" FontWeight="Bold"/>
+                        <DockPanel>
+                            <TextBlock Text="Name:"/>
+                            <TextBox MinWidth="100" Text="{Binding Path=CreateName, Mode=TwoWay}"/>
+                        </DockPanel>
+                        <DockPanel>
+                            <TextBlock Text="Category:"/>
+                            <TextBox Text="{Binding Path=CreateCategory, Mode=TwoWay}" MinWidth="100" HorizontalAlignment="Right"/>
+                        </DockPanel>
+                        <DockPanel>
+                            <TextBlock Text="Description:"/>
+                            <TextBox Text="{Binding Path=CreateDescription, Mode=TwoWay}" MinWidth="100" HorizontalAlignment="Right"/>
+                        </DockPanel>
+                        <DockPanel>
+                            <TextBlock Text="Price:"/>
+                            <TextBox Text="{Binding Path=CreatePrice, Mode=TwoWay}" MinWidth="100" HorizontalAlignment="Right"/>
+                        </DockPanel>
+                        <DockPanel>
+                            <TextBlock Text="Quantity:"/>
+                            <TextBox Text="{Binding Path=CreateQuantity, Mode=TwoWay}" MinWidth="100" HorizontalAlignment="Right"/>
+                        </DockPanel>
+                        <DockPanel>
+                            <TextBlock Text="Discount (?):"/>
+                            <TextBox Text="{Binding Path=CreateDiscount, Mode=TwoWay}" MinWidth="100" HorizontalAlignment="Right"/>
+                            <TextBlock Text="%"/>
+                        </DockPanel>
+                        <Button Content="Add product" Command="{Binding Path=OnAddNewProduct}"/>
+                    </StackPanel>
+                </Border>
+                
+                
+            </StackPanel>
             
         </StackPanel>
+
     </DockPanel>
+        
 
 </Window>

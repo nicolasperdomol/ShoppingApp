@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Page Include="App.xaml" />
+    <None Remove="Views\Img\Icons\minus.png" />
     <None Remove="Views\Img\shopping-cart.png" />
     <None Remove="Views\Img\user.png" />
   </ItemGroup>
@@ -18,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Views\Img\Icons\minus.png" />
     <Resource Include="Views\Img\Icons\shopping-cart.png" />
     <Resource Include="Views\Img\Icons\user.png" />
   </ItemGroup>

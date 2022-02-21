@@ -1,4 +1,4 @@
-﻿using Isi.ShoppingApp.Core.Entities;
+﻿ using Isi.ShoppingApp.Core.Entities;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;

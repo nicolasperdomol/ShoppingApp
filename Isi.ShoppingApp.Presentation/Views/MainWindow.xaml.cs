@@ -22,14 +22,15 @@ namespace Isi.ShoppingApp.Presentation.Views
 {
     public partial class MainWindow : Window
     {
-        Controller controller;
+        MainWindowViewModel controller;
         public MainWindow()
         {
             InitializeComponent();
-            controller = new Controller();
+            controller = new MainWindowViewModel();
             DataContext = controller;
             
         }
+
 
         private void OnItemButtonClicked(object sender, RoutedEventArgs e)
         {
@@ -40,6 +41,23 @@ namespace Isi.ShoppingApp.Presentation.Views
             Width = Inventory.Width + CartPanel.Width + ShoppingCartDropdown.Width;
             controller.ProductSelected = productService.GetProduct(ButtonId);
         }
+
+        private void OnMinusButton(object sender, RoutedEventArgs e)
+        {
+            ProductService service = new ProductService();
+            long ButtonId = (long)(sender as Button).Tag;
+            int index = controller.FindProductIndexInCart(ButtonId);
+
+            if (index >= 0)
+                if(controller.ShoppingCart[index].Quantity >= 1)
+                {
+                    controller.ShoppingCart[index].Quantity--;
+                    controller.RawTotal -= controller.ShoppingCart[index].FinalPrice;
+                    controller.ShoppingCart = controller.UpdateShoppingCart();
+                }
+        }
+
+
 
         private void ModifyCartPanelView()
         {
@@ -77,7 +95,7 @@ namespace Isi.ShoppingApp.Presentation.Views
             if (!IsShoppingCartVisible())
             {
                 ShoppingCartDropdown.Visibility = Visibility.Visible;
-                ShoppingCartDropdown.MinWidth = 100;
+                ShoppingCartDropdown.MinWidth = 150;
                 HideUserPanel();
             }
 
@@ -85,8 +103,7 @@ namespace Isi.ShoppingApp.Presentation.Views
             { 
                 HideShoppingCartPanel();
             }
-
-            Width = 1000;
+            Width = 1100;
         }
 
         private void HideShoppingCartPanel()
@@ -104,5 +121,14 @@ namespace Isi.ShoppingApp.Presentation.Views
         {
             return UserDropdown.Visibility == Visibility.Visible;
         }
+
+        private void OpenCart(object sender, RoutedEventArgs e)
+        {
+            ShoppingCartDropdown.Visibility = Visibility.Visible;
+            ShoppingCartDropdown.MinWidth = 150;
+            Width = 1100;
+        }
+
+        
     }
 }
