@@ -218,19 +218,5 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
             return success;
         }
 
-
-        /*TODO
-         * 1. DO METHOD ACTION FOR BuyNow Button.
-         * 2. DO METHOD ACTION FOR ShoppingCart
-         * 3. DO METHOD ACTION FOR Add to Cart
-         * 4. Create button add to cart
-         * 5. create list<Porducts> ShoppingCart
-         *    DO remove all items from shopping cart
-         *    Notify shopping cart when adding to cart.
-         * FINAL: GET BALANCE FROM USER [if it is valid to buy the product (amount * price):]
-         * REMOVE AmountToBuy from the selected product.
-         * 
-         * EXTRA: LINK 1:1 IMAGE:PRODUCT
-         */
     }
 }

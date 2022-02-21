@@ -319,51 +319,32 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
             return sum;
         }
 
-        //IF EVERYTHING WORKS CHANGE PUBLIC => PRIVATE 
-        public Product AddProduct(Product product)
+        private Product AddProduct(Product product)
         {
             Product newProduct = ProductService.AddProduct(product);
             NotifyPropertyChanged(nameof(Products));
             return newProduct;
         }
 
-        //IF EVERYTHING WORKS CHANGE PUBLIC => PRIVATE 
-        public bool RemoveProduct(Product product)
+        private bool RemoveProduct(Product product)
         {
             bool success = ProductService.RemoveProduct(product);
             NotifyPropertyChanged(nameof(Products));
             return success;
         }
 
-        //IF EVERYTHING WORKS CHANGE PUBLIC => PRIVATE 
-        public bool RemoveProduct(long id)
+        private bool RemoveProduct(long id)
         {
             bool success = ProductService.RemoveProduct(id);
             NotifyPropertyChanged(nameof(Products));
             return success;
         }
 
-        //IF EVERYTHING WORKS CHANGE PUBLIC => PRIVATE 
         public bool UpdateProduct(Product product)
         {
             bool success = productService.UpdateProduct(product);
             NotifyPropertyChanged(nameof(Products));
             return success;
         }
-
-
-        /*TODO
-         * 1. DO METHOD ACTION FOR BuyNow Button.
-         * 2. DO METHOD ACTION FOR ShoppingCart
-         * 3. DO METHOD ACTION FOR Add to Cart
-         * 4. Create button add to cart
-         * 5. create list<Porducts> ShoppingCart
-         *    DO remove all items from shopping cart
-         *    Notify shopping cart when adding to cart.
-         * FINAL: GET BALANCE FROM USER [if it is valid to buy the product (amount * price):]
-         * REMOVE AmountToBuy from the selected product.
-         * 
-         * EXTRA: LINK 1:1 IMAGE:PRODUCT
-         */
     }
 }
