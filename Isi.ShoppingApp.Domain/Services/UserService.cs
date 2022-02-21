@@ -1,15 +1,20 @@
 ﻿using Isi.ShoppingApp.Core.Entities;
 using Isi.ShoppingApp.Data.Repositories;
 using Isi.Utility.Authentication;
-using System;
+using Isi.Utility.ViewModels;
 using System.Collections.Generic;
+using System.Windows;
 
+//SHARMAINE
 namespace Isi.ShoppingApp.Domain.Services
 {
-    public class UserService
+     public delegate void ActionSucceededHandler(string message);
+     public delegate void ActionFailedHandler(string message);
+    public class UserService : ViewModel
     {
+        public event ActionSucceededHandler ActionSucceeded;
+        public event ActionFailedHandler FailedAction;
         UserRepository repository;
-        //ADD error message
         public UserService()
         {
             repository = new UserRepository();
@@ -81,5 +86,6 @@ namespace Isi.ShoppingApp.Domain.Services
             }
             return false;
         }
+
     }
 }

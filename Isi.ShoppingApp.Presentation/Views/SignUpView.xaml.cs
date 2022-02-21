@@ -2,6 +2,7 @@
 using Isi.Utility.Authentication;
 using System.Windows;
 
+//SHARMAINE
 namespace Isi.ShoppingApp.Presentation.Views
 {
     public partial class SignUpView : Window

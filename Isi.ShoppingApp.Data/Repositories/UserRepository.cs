@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 
+//SHARMAINE
 namespace Isi.ShoppingApp.Data.Repositories
 {
     public class UserRepository
@@ -120,7 +121,8 @@ namespace Isi.ShoppingApp.Data.Repositories
             connection.Open();
 
             using SqlCommand command = connection.CreateCommand();
-            command.CommandText = "INSERT INTO dbo.Users VALUES (@FirstName, @LastName, @Username, @PasswordSalt, @PasswordHash, @Admin, @Balance)";
+            command.CommandText = "INSERT INTO dbo.Users(FirstName, LastName, Username, PasswordSalt, PasswordHash, Admin, Balance) " +
+                "VALUES(@FirstName, @LastName, @Username, @PasswordSalt, @PasswordHash, @Admin, @Balance)";
 
             command.Parameters.Add("@FirstName", SqlDbType.NVarChar).Value = user.FirstName;
             command.Parameters.Add("@LastName", SqlDbType.NVarChar).Value = user.LastName;
@@ -130,6 +132,7 @@ namespace Isi.ShoppingApp.Data.Repositories
             command.Parameters.Add("@Admin", SqlDbType.Bit).Value = user.IsAdmin;
             command.Parameters.Add("@Balance", SqlDbType.Decimal).Value = user.Balance;
 
+            command.ExecuteNonQuery();
             return new User(user.FirstName, user.LastName, user.Username, user.HashedPassword, user.IsAdmin, user.Balance);
         }
 
@@ -163,7 +166,6 @@ namespace Isi.ShoppingApp.Data.Repositories
             command.Parameters.Add("@PasswordHash", SqlDbType.VarBinary).Value = user.HashedPassword.Hash;
             command.Parameters.Add("@Admin", SqlDbType.Bit).Value = user.IsAdmin;
             command.Parameters.Add("@Balance", SqlDbType.Decimal).Value = user.Balance;
-
 
             int rowsChanges = command.ExecuteNonQuery();
             return rowsChanges > 0;

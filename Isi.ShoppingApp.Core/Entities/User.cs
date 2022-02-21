@@ -1,5 +1,7 @@
 ﻿using Isi.Utility.Authentication;
 
+
+//SHARMAINE
 namespace Isi.ShoppingApp.Core.Entities
 {
     public class User
@@ -11,9 +13,7 @@ namespace Isi.ShoppingApp.Core.Entities
             set
             {
                 if (IsStringValid(value))
-                {
                     firstName = value;
-                }
             }
         }
 
@@ -24,9 +24,7 @@ namespace Isi.ShoppingApp.Core.Entities
             set
             {
                 if (IsStringValid(value))
-                {
                     lastName = value;
-                }
             }
         }
 
@@ -43,22 +41,9 @@ namespace Isi.ShoppingApp.Core.Entities
             private set
             {
                 if (IsStringValid(value))
-                {
                     username = value;
-                }
             }
 
-        }
-
-        private string password;
-        public string Password
-        {
-            get => password;
-            set
-            {
-                if(!string.IsNullOrWhiteSpace(value))
-                    password = value;
-            }
         }
 
         private HashedPassword hashedPassword;
@@ -67,10 +52,8 @@ namespace Isi.ShoppingApp.Core.Entities
             get => hashedPassword;
             private set
             {
-                if(value != null)
-                {
+                if (value != null)
                     hashedPassword = value;
-                }
             }
         }
 
@@ -127,7 +110,7 @@ namespace Isi.ShoppingApp.Core.Entities
 
         public override string ToString()
         {
-            return $"Name: {FullName}, Username: {Username} ";
+            return $"Name: {FullName}, Username: {Username}, IsAdmin: {IsAdmin}, Balance: {Balance}";
         }
 
     }

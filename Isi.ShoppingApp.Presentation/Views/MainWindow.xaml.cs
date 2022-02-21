@@ -17,16 +17,17 @@ using Isi.ShoppingApp.Presentation;
 using Isi.ShoppingApp.Domain.Services;
 using Isi.ShoppingApp.Presentation.ViewModels;
 using System.Diagnostics;
+using Isi.ShoppingApp.Core.Entities;
 
 namespace Isi.ShoppingApp.Presentation.Views
 {
     public partial class MainWindow : Window
     {
         Controller controller;
-        public MainWindow()
+        public MainWindow(User user)
         {
             InitializeComponent();
-            controller = new Controller();
+            controller = new Controller(user);
             DataContext = controller;
             
         }

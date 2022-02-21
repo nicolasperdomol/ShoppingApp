@@ -15,7 +15,7 @@ namespace Isi.ShoppingApp.Tests
             //Isi.ShoppingApp.Domain.Services.Inventory inventory = new Domain.Services.Inventory();
 
             UserRepository repository = new UserRepository();
-            User test = new User("Sharmaine", "Bajala", "sbajala", PasswordHasher.HashPassword("abc"), true, 30.00m);
+            User test = new User("Mia", "Taylor", "mtaylor", PasswordHasher.HashPassword("goudacheese10"), true, 200);
             User user = repository.CreateUser(test);
 
 

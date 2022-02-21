@@ -22,6 +22,8 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
         public DelegateCommand OnBuyNowHandler { get; }
         public DelegateCommand OnAddToCartHandler { get; }
 
+        UserService userService;
+
         public Product ProductToCart
         {
             get => productToCart;
@@ -85,16 +87,28 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
 
 
         //INSTANCE OF USER
-        public string User { get; set; }
+        public User User { get; set; }
 
+        public string FullName { get; set; }
+        private decimal balance;
+        public decimal Balance
+        {
+            get => balance;
+            set
+            {
+                if (value > 0)
+                    balance = value;
+            }
+        }
 
         //USER CART
         private ObservableCollection<Product> shoppingCart;
         private Product productToCart;
         private int amountToCart;
         
-        public Controller()
+        public Controller(User user)
         {
+            userService = new UserService();
             ProductSelected = Products[0];
             IncreaseAmountToBuy = new DelegateCommand(Increment, CanIncrement);
             DecreaseAmountToBuy = new DelegateCommand(Decrement);
@@ -103,7 +117,8 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
 
 
             ShoppingCart = new ObservableCollection<Product>();
-            User = "Nicolas Perdomo";
+            User = user;
+            FullName = user.FullName;
             AmountToBuy = 1;
         }
 

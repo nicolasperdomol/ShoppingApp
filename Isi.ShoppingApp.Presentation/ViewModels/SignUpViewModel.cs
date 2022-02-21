@@ -2,13 +2,10 @@
 using Isi.ShoppingApp.Domain.Services;
 using Isi.Utility.Authentication;
 using Isi.Utility.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Security;
 using System.Windows;
 
+//SHARMAINE
 namespace Isi.ShoppingApp.Presentation.ViewModels
 {
     public delegate void SignUpSucceededHandler(string message);
@@ -117,12 +114,11 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
             SignUpCommand = new DelegateCommand(SignUp, CanSignUp);
         }
 
-        //TODO
         private bool CanSignUp(object _)
         {
-            return !string.IsNullOrWhiteSpace(firstName)
-                && !string.IsNullOrWhiteSpace(lastName)
-                && !string.IsNullOrWhiteSpace(username)
+            return IsNameValid(firstName)
+                && IsNameValid(lastName)
+                && IsUsernameValid(username)
                 && hashedPassword != null;
         }
 
@@ -137,7 +133,6 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
             SignUpFailed?.Invoke("Could not successfully sign up");
         }
 
-
         private void ClearFieldProperties()
         {
             FirstName = "";
@@ -151,11 +146,62 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
             return !string.IsNullOrWhiteSpace(input);
         }
 
+        private bool IsNameValid(string name)
+        {
+            return IsInputValid(name)
+                && !ContainsPunctuation(name)
+                && !ContainsNumbers(name);
+
+        }
+
+        private bool IsUsernameValid(string username)
+        {
+            return IsInputValid(username)
+                && !ContainsPunctuation(username)
+                && !ContainsUppercase(username)
+                && !username.Contains(" ");
+        }
+
+        private bool ContainsPunctuation(string input)
+        {
+            bool containsPunctuation = false;
+
+            for(int i = 0; i < input.Length; i++)
+            {
+                if (input.Any(char.IsPunctuation))
+                {
+                    containsPunctuation = true;
+                }
+            }
+            return containsPunctuation;
+        }
+
+        private bool ContainsUppercase(string input)
+        {
+            bool containsUppercase = false;
+
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (input.Any(char.IsUpper))
+                {
+                    containsUppercase = true;
+                }
+            }
+            return containsUppercase;
+        }
+
+        private bool ContainsNumbers(string input)
+        {
+            bool containsNumbers = false;
+
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (input.Any(char.IsDigit))
+                {
+                    containsNumbers = true;
+                }
+            }
+            return containsNumbers;
+        }
     }
-
-
-
-
-
-
 }

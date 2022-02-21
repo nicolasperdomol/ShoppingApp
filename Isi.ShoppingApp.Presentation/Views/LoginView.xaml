@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Isi.ShoppingApp.Presentation.Views"
-        mc:Ignorable="d" Width="240" Height="250">
+        mc:Ignorable="d" Title="Login" Width="240" Height="280">
     
     <Window.Resources>
         <Style TargetType="TextBox">
@@ -32,26 +32,39 @@
 
     <Border BorderThickness="1"
             BorderBrush="Orange"
-            Margin="5">
+            Margin="5"
+            CornerRadius="3">
         <StackPanel Margin="10">
 
-            <Label Content="Login" HorizontalContentAlignment="Center"
+            <Border BorderThickness="1" 
+                    BorderBrush="Orange"
+                    CornerRadius="3">
+                <Label Content="Login" HorizontalContentAlignment="Center"
                FontWeight="Bold"
                FontSize="14"
-               Padding="10"/>
+               Foreground="White"
+               Padding="10"
+                   Background="Orange"/>
+            </Border>
 
-            <DockPanel>
+            <Separator Height="15" Background="Transparent"/>
+
+            <DockPanel Margin="2">
                 <Label Content="Username"/>
-                <TextBox x:Name="usernameTextBox" Text="{Binding Path=Username, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox x:Name="usernameTextBox" Text="{Binding Path=Username, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
             </DockPanel>
 
-            <DockPanel>
+            <Separator Height="2" Background="Transparent"/>
+
+            <DockPanel Margin="2">
                 <Label Content="Password "/>
                 <PasswordBox x:Name="passwordBox"
                              PasswordChanged="passwordBox_PasswordChanged"/>
             </DockPanel>
 
-            <DockPanel Margin="5">
+            <Separator Background="Transparent" Height="5"/>
+            
+            <DockPanel>
                 <Button Content="Log in"
                     Command="{Binding Path=LoginCommand}"/>
             </DockPanel>

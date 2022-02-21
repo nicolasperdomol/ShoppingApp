@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using Isi.ShoppingApp.Presentation.Views;
 using Isi.ShoppingApp.Domain.Services;
 
+//SHARMAINE
 namespace Isi.ShoppingApp.Presentation.ViewModels
 {
     public delegate void LoginSucceededHandler();
@@ -17,7 +18,6 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
         public UserService userService;
         public DelegateCommand LoginCommand { get; }
         public ObservableCollection<User> Users { get; }
-        public System.Security.SecureString SecuredPassword { get; }
 
         public event LoginSucceededHandler LoginSucceeded;
         public event LoginFailedHandler FailedLogin;
@@ -28,7 +28,7 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
             get => username;
             set
             {
-                if(IsInputValid(value))
+                if (IsInputValid(value))
                 {
                     username = value;
                     LoginCommand.NotifyCanExecuteChanged();
@@ -65,8 +65,10 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
                     NotifyPropertyChanged(nameof(HashedPassword));
                 }
             }
-  
+
         }
+
+        public bool IsAdmin { get; }
 
         private bool loggedIn;
         public bool IsLoggedIn
@@ -105,8 +107,7 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
                     if (ValidateLogin(Password, HashedPassword))
                     {
                         IsLoggedIn = true;
-                        LoginSucceeded?.Invoke(); //WILL CLOSE CURRENT WINDOW AND OPEN NEW ONE (?)
-                        ClearFields();
+                        LoginSucceeded?.Invoke();
                     }
                     else
                     {
@@ -122,8 +123,6 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
             {
                 FailedLogin?.Invoke("Could not log in. Username or password is invalid.");
             }
-
-            ClearFields();
         }
 
         private bool IsInputValid(string input)
@@ -146,12 +145,5 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
             PasswordResult result = PasswordHasher.CheckPassword(password, hashedPassword);
             return result == PasswordResult.Correct;
        }
-
-        private void ClearFields()
-        {
-            Username = string.Empty;
-            Password = string.Empty;
-            HashedPassword = null;
-        }
     }
 }
