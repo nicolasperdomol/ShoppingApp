@@ -8,59 +8,69 @@ using System.Collections.ObjectModel;
 using Isi.ShoppingApp.Presentation.Views;
 using Isi.ShoppingApp.Domain.Services;
 
+//SHARMAINE
 namespace Isi.ShoppingApp.Presentation.ViewModels
 {
     public delegate void LoginSucceededHandler();
+    public delegate void LoginFailedHandler(string message);
     class LoginViewModel : ViewModel
     {
         public UserService userService;
         public DelegateCommand LoginCommand { get; }
         public ObservableCollection<User> Users { get; }
-        public System.Security.SecureString SecuredPassword { get; }
 
         public event LoginSucceededHandler LoginSucceeded;
+        public event LoginFailedHandler FailedLogin;
 
+        private string username;
         public string Username
         {
             get => username;
             set
             {
-                if(IsInputValid(value))
+                if (IsInputValid(value))
                 {
                     username = value;
                     LoginCommand.NotifyCanExecuteChanged();
+                    NotifyPropertyChanged(nameof(Username));
                 }
             }
         }
-        private string username;
 
+
+        private string password;
         public string Password
         {
             get => password;
             set
             {
-                if (IsInputValid(value))
+                if (!string.IsNullOrWhiteSpace(value))
                 {
                     password = value;
-                    LoginCommand.NotifyCanExecuteChanged();
+                    NotifyPropertyChanged(nameof(Password));
                 }
-
             }
-        }
-        private string password;
 
+        }
+
+        private HashedPassword hashedPassword;
         public HashedPassword HashedPassword
         {
             get => hashedPassword;
             set
             {
-                if (value != null )
+                if (value != null)
+                {
                     hashedPassword = value;
+                    NotifyPropertyChanged(nameof(HashedPassword));
+                }
             }
-  
-        }
-        private HashedPassword hashedPassword;
 
+        }
+
+        public bool IsAdmin { get; }
+
+        private bool loggedIn;
         public bool IsLoggedIn
         {
             get => loggedIn;
@@ -69,14 +79,13 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
                 loggedIn = value;
             }
         }
-        private bool loggedIn;
 
         public bool IsLoggedOut
         {
             get => !loggedIn;
         }
 
-        public LoginViewModel() 
+        public LoginViewModel()
         {
             userService = new UserService();
             LoginCommand = new DelegateCommand(LogIn, CanLogIn);
@@ -84,61 +93,57 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
 
         private bool CanLogIn(object _)
         {
-            return !string.IsNullOrWhiteSpace(Username)
-                    && !string.IsNullOrWhiteSpace(Password);
+            return !string.IsNullOrWhiteSpace(username)
+                && !string.IsNullOrWhiteSpace(password);
         }
 
         private void LogIn(object _)
         {
             if (CanLogIn(_))
             { 
-                if (IsUsernameValid(Username))
+                if (IsUsernameExistant(Username))
                 {
-                    HashedPassword = getHashedPasswordOfUsername(Username);
+                    HashedPassword = GetHashedPassword(Username);
                     if (ValidateLogin(Password, HashedPassword))
                     {
                         IsLoggedIn = true;
-                        LoginSucceeded?.Invoke(); //WILL CLOSE CURRENT WINDOW AND OPEN NEW ONE (?)
-                        Trace.WriteLine("Logging in"); //FOR TESTING PURPOSES
+                        LoginSucceeded?.Invoke();
                     }
-                    MessageBox.Show("Username and password combination does not exist.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    else
+                    {
+                        FailedLogin?.Invoke("Username or password is incorrect.");
+                    }
                 }
-                MessageBox.Show("Username or password is invalid.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                else
+                {
+                    FailedLogin?.Invoke("Username does not exist.");
+                }
+            }
+            else
+            {
+                FailedLogin?.Invoke("Could not log in. Username or password is invalid.");
             }
         }
 
         private bool IsInputValid(string input)
         {
-            if (!string.IsNullOrWhiteSpace(input))
-                return true;
-
-            return false;
+            return !string.IsNullOrWhiteSpace(input);
         }
 
-        private bool IsUsernameValid(string username)
+        private bool IsUsernameExistant(string username)
         {
-            if (userService.GetUser(username) != null)
-                return true;
-
-            MessageBox.Show("Username does not exist.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            return false;
+            return userService.UserExist(username);
         }
 
-        private HashedPassword getHashedPasswordOfUsername(string username)
+        private HashedPassword GetHashedPassword(string username)
         {
-            if (IsUsernameValid(username)) 
-            {
-                return HashedPassword = userService.GetUserPassword(username);
-            }
-            return null;
+            return HashedPassword = userService.GetUserPassword(username);
         }
 
        private bool ValidateLogin(string password, HashedPassword hashedPassword)
-        {
+       {
             PasswordResult result = PasswordHasher.CheckPassword(password, hashedPassword);
-            return (result == PasswordResult.Correct);
-        }
-
-
+            return result == PasswordResult.Correct;
+       }
     }
 }

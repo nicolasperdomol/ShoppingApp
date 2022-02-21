@@ -17,6 +17,7 @@ using Isi.ShoppingApp.Presentation;
 using Isi.ShoppingApp.Domain.Services;
 using Isi.ShoppingApp.Presentation.ViewModels;
 using System.Diagnostics;
+using Isi.ShoppingApp.Core.Entities;
 
 namespace Isi.ShoppingApp.Presentation.Views
 {

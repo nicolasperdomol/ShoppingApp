@@ -1,20 +1,31 @@
 ﻿using Isi.ShoppingApp.Core.Entities;
 using Isi.ShoppingApp.Data.Repositories;
 using Isi.Utility.Authentication;
-using System;
+using Isi.Utility.ViewModels;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 
+//SHARMAINE
 namespace Isi.ShoppingApp.Domain.Services
 {
-    public class UserService
+     public delegate void ActionSucceededHandler(string message);
+     public delegate void ActionFailedHandler(string message);
+    public class UserService : ViewModel
     {
+        public event ActionSucceededHandler ActionSucceeded;
+        public event ActionFailedHandler FailedAction;
         UserRepository repository;
         public UserService()
         {
             repository = new UserRepository();
+        }
+
+        public bool UserExist(string username)
+        {
+            if (!string.IsNullOrWhiteSpace(username))
+                return repository.UserExist(username);
+
+            return false;
         }
 
         public List<User> GetUsers()
@@ -24,22 +35,57 @@ namespace Isi.ShoppingApp.Domain.Services
 
         public User GetUser(string username)
         {
-            return repository.GetUser(username);
+            if(!string.IsNullOrWhiteSpace(username))
+                return repository.GetUser(username);
+
+            return null;
         }
 
         public HashedPassword GetUserPassword(string username)
         {
-            return repository.GetUserPassword(username);
+            if(!string.IsNullOrWhiteSpace(username))
+                return repository.GetUserPassword(username);
+
+            return null;
         }
 
         public User AddUser(User user)
         {
-            return repository.CreateUser(user);
+            if(user != null)
+                return repository.CreateUser(user);
+
+            return null;
         }
 
         public bool DeleteUser(User user)
         {
-            return repository.DeleteUser(user.Username);
+            if(repository.UserExist(user.Username))
+                return repository.DeleteUser(user.Username);
+
+            return false;
         }
+
+        public bool AddToBalance(User user, decimal amount)
+        {
+            if(repository.UserExist(user.Username)
+                && amount > 0)
+            {
+                user.AddAmountToBalance(amount);
+                return repository.UpdateUser(user);
+            }
+            return false;
+        }
+
+        public bool SubtractFromBalance(User user, decimal amount)
+        {
+            if (repository.UserExist(user.Username)
+                && amount < user.Balance)
+            {
+                user.SubtractAmountFromBalance(amount);
+                return repository.UpdateUser(user);
+            }
+            return false;
+        }
+
     }
 }
