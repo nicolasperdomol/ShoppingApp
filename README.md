@@ -1,5 +1,17 @@
 # ShoppingApp
 
+Usernames and passwords for tests:
+
+jamesreid - applebeans12 //client
+
+eliza29 - bluemoon! //client
+
+jsantos - mypass123 //client
+
+mtaylor - goudacheese10 //admin
+
+
+---------------------------
 Required features:
 
 We have implement a log in and log out authentication. Usernames cannot be duplicated, therefore each user must have a unique username. Special characters or spaces are not
