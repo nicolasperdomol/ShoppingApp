@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Isi.ShoppingApp.Presentation.Views"
-        mc:Ignorable="d" Title="Login" Width="240" Height="280">
+        mc:Ignorable="d" Title="Login" MaxWidth="240" MaxHeight="280">
     
     <Window.Resources>
         <Style TargetType="TextBox">
@@ -25,33 +25,32 @@
             <Setter Property="Margin" Value="10"/>
             <Setter Property="FontWeight" Value="Medium"/>
             <Setter Property="Background" Value="WhiteSmoke"/>
-
         </Style>
     </Window.Resources>
 
 
     <Border BorderThickness="1"
-            BorderBrush="Orange"
+            BorderBrush="#FFBA24"
             Margin="5"
             CornerRadius="3">
+        
         <StackPanel Margin="10">
-
             <Border BorderThickness="1" 
-                    BorderBrush="Orange"
+                    BorderBrush="#FFBA24"
                     CornerRadius="3">
                 <Label Content="Login" HorizontalContentAlignment="Center"
-               FontWeight="Bold"
-               FontSize="14"
-               Foreground="White"
-               Padding="10"
-                   Background="Orange"/>
+                       FontWeight="Bold"
+                       FontSize="14"
+                       Foreground="White"
+                       Padding="10"
+                       Background="#FFBA24"/>
             </Border>
 
             <Separator Height="15" Background="Transparent"/>
 
             <DockPanel Margin="2">
                 <Label Content="Username"/>
-                <TextBox x:Name="usernameTextBox" Text="{Binding Path=Username, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                <TextBox x:Name="usernameTextBox" Text="{Binding Path=Username}"/>
             </DockPanel>
 
             <Separator Height="2" Background="Transparent"/>
@@ -82,7 +81,7 @@
                     HorizontalAlignment="Left"
                     FontSize="9"
                     Width="45"
-                    Foreground="Orange"
+                    Foreground="#FFBA24"
                     Height="20"/>
             </DockPanel>
         </StackPanel>

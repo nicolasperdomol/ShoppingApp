@@ -44,7 +44,7 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
             get => password;
             set
             {
-                if (!string.IsNullOrWhiteSpace(value))
+                if (IsInputValid(value))
                 {
                     password = value;
                     NotifyPropertyChanged(nameof(Password));
@@ -93,8 +93,8 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
 
         private bool CanLogIn(object _)
         {
-            return !string.IsNullOrWhiteSpace(username)
-                && !string.IsNullOrWhiteSpace(password);
+            return IsInputValid(username)
+                && IsInputValid(password);
         }
 
         private void LogIn(object _)
@@ -111,17 +111,13 @@ namespace Isi.ShoppingApp.Presentation.ViewModels
                     }
                     else
                     {
-                        FailedLogin?.Invoke("Username or password is incorrect.");
+                        FailedLogin?.Invoke("Password is incorrect.");
                     }
                 }
                 else
                 {
                     FailedLogin?.Invoke("Username does not exist.");
                 }
-            }
-            else
-            {
-                FailedLogin?.Invoke("Could not log in. Username or password is invalid.");
             }
         }
 

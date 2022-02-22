@@ -50,10 +50,7 @@ namespace Isi.ShoppingApp.Data.Repositories
 
         public bool UserExist(string username)
         {
-            if (GetUser(username) != null)
-                return true;
-
-            return false;
+            return (GetUser(username) != null);
         }
 
         public User GetUser(string username)
@@ -112,7 +109,6 @@ namespace Isi.ShoppingApp.Data.Repositories
                 return (byte[])reader.GetValue("PasswordHash"); ;
 
             return null;
-            
         }
 
         public User CreateUser(User user)
@@ -147,7 +143,7 @@ namespace Isi.ShoppingApp.Data.Repositories
             command.Parameters.Add("@Username", SqlDbType.NVarChar).Value = username;
 
             int rowsChanged = command.ExecuteNonQuery();
-            return (rowsChanged > 0);
+            return rowsChanged > 0;
         }
 
         public bool UpdateUser(User user)
@@ -157,7 +153,7 @@ namespace Isi.ShoppingApp.Data.Repositories
 
             using SqlCommand command = connection.CreateCommand();
             command.CommandText = "UPDATE dbo.Users SET FirstName = @FirstName, LastName = @LastName, Username = @Username, " +
-                                   "PasswordSalt = @PasswordSalt, PasswordHash = @PasswordHash, Admin = @Admin, Balance = @Balance";
+                                  "PasswordSalt = @PasswordSalt, PasswordHash = @PasswordHash, Admin = @Admin, Balance = @Balance";
 
             command.Parameters.Add("@FirstName", SqlDbType.NVarChar).Value = user.FirstName;
             command.Parameters.Add("@LastName", SqlDbType.NVarChar).Value = user.LastName;

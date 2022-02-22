@@ -110,7 +110,7 @@ namespace Isi.ShoppingApp.Core.Entities
 
         public override string ToString()
         {
-            return $"Name: {FullName}, Username: {Username}, IsAdmin: {IsAdmin}, Balance: {Balance}";
+            return $"User: {FullName}, Username: {Username}, IsAdmin: {IsAdmin}, Balance: {Balance}";
         }
 
     }

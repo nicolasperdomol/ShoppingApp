@@ -8,12 +8,8 @@ using System.Windows;
 //SHARMAINE
 namespace Isi.ShoppingApp.Domain.Services
 {
-     public delegate void ActionSucceededHandler(string message);
-     public delegate void ActionFailedHandler(string message);
     public class UserService : ViewModel
     {
-        public event ActionSucceededHandler ActionSucceeded;
-        public event ActionFailedHandler FailedAction;
         UserRepository repository;
         public UserService()
         {
@@ -22,7 +18,7 @@ namespace Isi.ShoppingApp.Domain.Services
 
         public bool UserExist(string username)
         {
-            if (!string.IsNullOrWhiteSpace(username))
+            if (IsStringValid(username))
                 return repository.UserExist(username);
 
             return false;
@@ -35,7 +31,7 @@ namespace Isi.ShoppingApp.Domain.Services
 
         public User GetUser(string username)
         {
-            if(!string.IsNullOrWhiteSpace(username))
+            if(IsStringValid(username))
                 return repository.GetUser(username);
 
             return null;
@@ -43,7 +39,7 @@ namespace Isi.ShoppingApp.Domain.Services
 
         public HashedPassword GetUserPassword(string username)
         {
-            if(!string.IsNullOrWhiteSpace(username))
+            if(IsStringValid(username))
                 return repository.GetUserPassword(username);
 
             return null;
@@ -67,8 +63,7 @@ namespace Isi.ShoppingApp.Domain.Services
 
         public bool AddToBalance(User user, decimal amount)
         {
-            if(repository.UserExist(user.Username)
-                && amount > 0)
+            if(repository.UserExist(user.Username) && amount > 0)
             {
                 user.AddAmountToBalance(amount);
                 return repository.UpdateUser(user);
@@ -78,8 +73,7 @@ namespace Isi.ShoppingApp.Domain.Services
 
         public bool SubtractFromBalance(User user, decimal amount)
         {
-            if (repository.UserExist(user.Username)
-                && amount < user.Balance)
+            if (repository.UserExist(user.Username) && amount <= user.Balance)
             {
                 user.SubtractAmountFromBalance(amount);
                 return repository.UpdateUser(user);
@@ -87,5 +81,9 @@ namespace Isi.ShoppingApp.Domain.Services
             return false;
         }
 
+        private bool IsStringValid(string input)
+        {
+            return !string.IsNullOrWhiteSpace(input);
+        }
     }
 }
